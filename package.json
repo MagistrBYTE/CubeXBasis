@@ -1,0 +1,19 @@
+{
+  "name": "com.magistrbyte.cubexbasis",
+  "version": "1.0.0",
+  "displayName": "CubeXBasis",
+  "description": "Basis set for Unity",
+  "unity": "2019.1",
+  "keywords": [
+    "Algorithm",
+    "Math",
+    "Core",
+    "Common",
+    "Patterns"
+  ],
+  "author": {
+    "name": "MagistrBYTE aka DanielDem",
+    "email": "dementevds@gmail.com"
+  },
+  "type": "library"
+}

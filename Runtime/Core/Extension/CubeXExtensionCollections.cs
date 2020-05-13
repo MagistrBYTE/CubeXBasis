@@ -1,0 +1,862 @@
+﻿//=====================================================================================================================
+// Проект: CubeXPlatform
+// Раздел: Модуль базового ядра
+// Подраздел: Методы расширений
+// Автор: MagistrBYTE aka DanielDem <dementevds@gmail.com>
+//---------------------------------------------------------------------------------------------------------------------
+/** \file CubeXExtensionCollections.cs
+*		Методы расширения работы с коллекциями.
+*		Реализация максимально обобщенных расширений направленных на работу с коллекциями и их отдельной функциональности.
+*/
+//---------------------------------------------------------------------------------------------------------------------
+// Версия: 1.0.0.0
+// Последнее изменение от 23.02.2020
+//=====================================================================================================================
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Text;
+using System.Linq;
+//=====================================================================================================================
+namespace CubeX
+{
+	namespace Core
+	{
+		//-------------------------------------------------------------------------------------------------------------
+		//! \addtogroup CoreModuleExtension
+		/*@{*/
+		//-------------------------------------------------------------------------------------------------------------
+		/// <summary>
+		/// Статический класс реализующий методы расширений для работы с коллекциями
+		/// </summary>
+		//-------------------------------------------------------------------------------------------------------------
+		public static class XExtensionCollections
+		{
+			#region ======================================= IEnumerable ===============================================
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Получение случайного элемента в коллекции
+			/// </summary>
+			/// <typeparam name="TItem">Тип элемента коллекции</typeparam>
+			/// <param name="this">Коллекция</param>
+			/// <returns>Элемент</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static TItem RandomElement<TItem>(this IEnumerable<TItem> @this)
+			{
+				var count = @this.Count();
+
+				if (count == 0)
+				{
+					return default(TItem);
+				}
+
+#if (UNITY_2017_1_OR_NEWER)
+				return @this.ElementAt(UnityEngine.Random.Range(0, count));
+#else
+				System.Random rand = new Random(System.Environment.TickCount);
+				return (@this.ElementAt(rand.Next(0, count)));
+#endif
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Выполнить действие над каждым элементом коллекции
+			/// </summary>
+			/// <typeparam name="TItem">Тип элемента коллекции</typeparam>
+			/// <param name="this">Коллекция</param>
+			/// <param name="on_action_item">Обработчик действия над каждым элементов коллекции</param>
+			/// <returns>Коллекция</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static IEnumerable<TItem> ForEach<TItem>(this IEnumerable<TItem> @this, Action<TItem> on_action_item)
+			{
+				foreach (var item in @this)
+				{
+					on_action_item.Invoke(item);
+				}
+
+				return @this;
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Проверка на наличие хотя бы одного элемента коллекции указанного типа
+			/// </summary>
+			/// <typeparam name="TItem">Тип элемента коллекции</typeparam>
+			/// <param name="this">Коллекция</param>
+			/// <returns>Статус наличия элемента</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static Boolean AnyIs<TItem>(this IEnumerable<System.Object> @this) where TItem : class
+			{
+				return @this.Any(x => x is TItem);
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Печать элементов коллекции
+			/// </summary>
+			/// <typeparam name="TItem">Тип элемента коллекции</typeparam>
+			/// <param name="this">Коллекция</param>
+			/// <param name="on_output_item">Обработчик вывода (печати) каждого элемента коллекции</param>
+			//---------------------------------------------------------------------------------------------------------
+			public static void Print<TItem>(this IEnumerable<TItem> @this, Action<String> on_output_item)
+			{
+				foreach (var item in @this)
+				{
+					on_output_item(item.ToString());
+				}
+			}
+			#endregion
+
+			#region ======================================= ICollection ===============================================
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Добавление элемента к коллекцию только в случае его отсутствия
+			/// </summary>
+			/// <typeparam name="TItem">Тип элемента коллекции</typeparam>
+			/// <param name="this">Коллекция</param>
+			/// <param name="element">Элемент</param>
+			/// <returns>Статус успешности добавления</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static Boolean AddIfNotContains<TItem>(this ICollection<TItem> @this, TItem element)
+			{
+				if (!@this.Contains(element))
+				{
+					@this.Add(element);
+					return true;
+				}
+
+				return false;
+			}
+			#endregion
+
+			#region ======================================= IList =====================================================
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Установка элемента списка по индексу с автоматическим увеличением размера при необходимости
+			/// </summary>
+			/// <param name="this">Список</param>
+			/// <param name="index">Индекс элемента списка</param>
+			/// <param name="element">Элемент списка</param>
+			//---------------------------------------------------------------------------------------------------------
+			public static void SetAt(this IList @this, Int32 index, System.Object element)
+			{
+				if (index >= @this.Count)
+				{
+					Int32 delta = index - @this.Count + 1;
+					for (Int32 i = 0; i < delta; i++)
+					{
+						@this.Add(element);
+					}
+
+					@this[index] = element;
+				}
+				else
+				{
+					@this[index] = element;
+				}
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Получение элемента списка по индексу
+			/// </summary>
+			/// <remarks>
+			/// В случае если индекс выходит за границы списка, то возвращается последний элемент
+			/// </remarks>
+			/// <param name="this">Список</param>
+			/// <param name="index">Индекс элемента списка</param>
+			/// <returns>Элемент</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static System.Object GetAt(this IList @this, Int32 index)
+			{
+				if (index >= @this.Count)
+				{
+					if (@this.Count == 0)
+					{
+						// Создаем объект по умолчанию
+						@this.Add(new System.Object());
+						return @this[0];
+					}
+					else
+					{
+						return @this[@this.Count - 1];
+					}
+				}
+				else
+				{
+					return @this[index];
+				}
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Цикличный доступ к индексатору на получение элемента позволяющий выходить за пределы индекса
+			/// </summary>
+			/// <typeparam name="TItem">Тип элемента списка</typeparam>
+			/// <param name="this">Список</param>
+			/// <param name="index">Индекс элемента списка</param>
+			/// <returns>Элемент</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static TItem GetLooped<TItem>(this IList<TItem> @this, Int32 index)
+			{
+				while (index < 0)
+				{
+					index += @this.Count;
+				}
+				if (index >= @this.Count)
+				{
+					index %= @this.Count;
+				}
+				return (@this[index]);
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Цикличный доступ к индексатору на установку элемента позволяющий выходить за пределы индекса
+			/// </summary>
+			/// <typeparam name="TItem">Тип элемента списка</typeparam>
+			/// <param name="this">Список</param>
+			/// <param name="index">Индекс элемента списка</param>
+			/// <param name="value">Элемент</param>
+			//---------------------------------------------------------------------------------------------------------
+			public static void SetLooped<TItem>(this IList<TItem> @this, Int32 index, TItem value)
+			{
+				while (index < 0)
+				{
+					index += @this.Count;
+				}
+				if (index >= @this.Count)
+				{
+					index %= @this.Count;
+				}
+				@this[index] = value;
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Перемещение элемента списка вниз
+			/// </summary>
+			/// <typeparam name="TItem">Тип элемента списка</typeparam>
+			/// <param name="this">Список</param>
+			/// <param name="element_index">Индекс перемещаемого элемента</param>
+			//---------------------------------------------------------------------------------------------------------
+			public static void MoveElementDown<TItem>(this IList<TItem> @this, Int32 element_index)
+			{
+				Int32 next = (element_index + 1) % @this.Count;
+				Swap(@this, element_index, next);
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Перемещение элемента списка вверх
+			/// </summary>
+			/// <typeparam name="TItem">Тип элемента списка</typeparam>
+			/// <param name="this">Список</param>
+			/// <param name="element_index">Индекс перемещаемого элемента</param>
+			//---------------------------------------------------------------------------------------------------------
+			public static void MoveElementUp<TItem>(this IList<TItem> @this, Int32 element_index)
+			{
+				Int32 previous = element_index - 1;
+				if (previous < 0) previous = @this.Count - 1;
+				Swap(@this, element_index, previous);
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Поиск элемента в списке
+			/// </summary>
+			/// <typeparam name="TItem">Тип элемента списка</typeparam>
+			/// <param name="this">Список</param>
+			/// <param name="element">Искомый элемент</param>
+			/// <returns>Индекс найденного элемента или -1</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static Int32 IndexOf<TItem>(this IList<TItem> @this, TItem element)
+			{
+				if(typeof(TItem).IsValueType)
+				{
+					for (Int32 i = 0; i < @this.Count; i++)
+					{
+						if (@this[i].Equals(element))
+						{
+							return (i);
+						}
+					}
+					return (-1);
+				}
+				else
+				{
+					for (Int32 i = 0; i < @this.Count; i++)
+					{
+						if (XObject.ObjectEquals(@this[i], element))
+						{
+							return (i);
+						}
+					}
+
+					return (-1);
+				}
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Проверка на уникальность элементов списка
+			/// </summary>
+			/// <typeparam name="TItem">Тип элемента списка</typeparam>
+			/// <param name="this">Список</param>
+			/// <returns>Статус уникальности</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static Boolean IsUnique<TItem>(this IList<TItem> @this)
+			{
+				if (typeof(TItem).IsValueType)
+				{
+					for (Int32 i = 0; i < @this.Count - 1; i++)
+					{
+						for (Int32 j = i + 1; j < @this.Count; j++)
+						{
+							if (@this[i].Equals(@this[j]))
+							{
+								return (false);
+							}
+						}
+					}
+				}
+				else
+				{
+					for (Int32 i = 0; i < @this.Count - 1; i++)
+					{
+						for (Int32 j = i + 1; j < @this.Count; j++)
+						{
+							if (XObject.ObjectEquals(@this[i], @this[j]))
+							{
+								return (false);
+							}
+						}
+					}
+				}
+
+				return true;
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Поиск элемента в списке
+			/// </summary>
+			/// <typeparam name="TItem">Тип элемента списка</typeparam>
+			/// <param name="this">Список</param>
+			/// <param name="element">Искомый элемент</param>
+			/// <returns>Индекс найденного элемента или 0</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static Int32 IndexOfOrDefault<TItem>(this IList<TItem> @this, TItem element)
+			{
+				if (typeof(TItem).IsValueType)
+				{
+					for (Int32 i = 0; i < @this.Count; i++)
+					{
+						if (@this[i].Equals(element))
+						{
+							return (i);
+						}
+					}
+				}
+				else
+				{
+					for (Int32 i = 0; i < @this.Count; i++)
+					{
+						if (XObject.ObjectEquals(@this[i], element))
+						{
+							return (i);
+						}
+					}
+				}
+				return (0);
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Проверка на равенство элементов списка
+			/// </summary>
+			/// <typeparam name="TItem">Тип элемента списка</typeparam>
+			/// <param name="this">Список</param>
+			/// <param name="other">Список</param>
+			/// <returns>Статус равенства элементов списка</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static Boolean EqualElements<TItem>(this IList<TItem> @this, IList<TItem> other)
+			{
+				if (@this.Count != other.Count)
+				{
+					return false;
+				}
+
+				if (typeof(TItem).IsValueType)
+				{
+					for (Int32 i = 0; i < @this.Count; i++)
+					{
+						if (!@this[i].Equals(other[i]))
+						{
+							return false;
+						}
+					}
+				}
+				else
+				{
+					for (Int32 i = 0; i < @this.Count; i++)
+					{
+						if (XObject.ObjectEquals(@this[i], other[i]) == false)
+						{
+							return false;
+						}
+					}
+				}
+
+				return true;
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Получение индекса последнего элемента списка
+			/// </summary>
+			/// <typeparam name="TItem">Тип элемента списка</typeparam>
+			/// <param name="this">Список</param>
+			/// <returns>Индекс последнего элемента списка</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static Int32 LastIndex<TItem>(this IList<TItem> @this)
+			{
+				return @this.Count - 1;
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Перетасовка элементов списка
+			/// </summary>
+			/// <typeparam name="TItem">Тип элемента списка</typeparam>
+			/// <param name="this">Список</param>
+			//---------------------------------------------------------------------------------------------------------
+			public static void Shuffle<TItem>(this IList<TItem> @this)
+			{
+				Random rand = new Random();
+				Int32 n = @this.Count;
+				while (n > 1)
+				{
+					n--;
+					Int32 k = rand.Next(n + 1);
+					@this.Swap(n, k);
+				}
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Обмен местами элементов списка
+			/// </summary>
+			/// <typeparam name="TItem">Тип элемента списка</typeparam>
+			/// <param name="this">Список</param>
+			/// <param name="old_index">Старая позиция</param>
+			/// <param name="new_index">Новая позиция</param>
+			/// <returns>Список</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static IList<TItem> Swap<TItem>(this IList<TItem> @this, Int32 old_index, Int32 new_index)
+			{
+				TItem temp = @this[old_index];
+				@this[old_index] = @this[new_index];
+				@this[new_index] = temp;
+				return @this;
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Циклическое смещение элементов списка
+			/// </summary>
+			/// <typeparam name="TItem">Тип элемента списка</typeparam>
+			/// <param name="this">Список</param>
+			/// <param name="forward">Статус смещение вперед</param>
+			/// <returns>Список</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static IList<TItem> Shift<TItem>(this IList<TItem> @this, Boolean forward)
+			{
+				Int32 length = @this.Count;
+				Int32 start;
+				Int32 sign;
+				Int32 i = 0;
+				Func<Boolean> condition;
+				if (forward)
+				{
+					start = 0;
+					sign = +1;
+					condition = () => i < length;
+				}
+				else
+				{
+					start = length - 1;
+					sign = -1;
+					condition = () => i >= 0;
+				}
+
+				TItem element_to_move = @this[start];
+				for (i = start; condition(); i += sign)
+				{
+					// - get the next element's atIndex
+					Int32 next_index;
+					if (forward)
+					{
+						next_index = (i + 1) % length;
+					}
+					else
+					{
+						next_index = i - 1;
+						if (next_index < 0) next_index = length - 1;
+					}
+					// - save next element in a temp variable
+					var next_element = @this[next_index];
+					// - copy the current element over the next
+					@this[next_index] = element_to_move;
+					// - update element to move, to the next element
+					element_to_move = next_element;
+				}
+				return @this;
+			}
+			#endregion
+
+			#region ======================================= Array =====================================================
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Установка элемента массива по индексу с автоматическим увеличением размера при необходимости
+			/// </summary>
+			/// <typeparam name="TItem">Тип элемента массива</typeparam>
+			/// <param name="this">Массив</param>
+			/// <param name="index">Индекс элемента массива</param>
+			/// <param name="element">Элемент массива</param>
+			//---------------------------------------------------------------------------------------------------------
+			public static void SetAt<TItem>(this TItem[] @this, Int32 index, TItem element)
+			{
+				if(index >= @this.Length)
+				{
+					Array.Resize(ref @this, index + 1);
+					@this[index] = element;
+				}
+				else
+				{
+					@this[index] = element;
+				}
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Получение элемента массива по индексу
+			/// </summary>
+			/// <remarks>
+			/// В случае если индекс выходит за границы массива, то возвращается последний элемент
+			/// </remarks>
+			/// <typeparam name="TItem">Тип элемента массива</typeparam>
+			/// <param name="this">Массив</param>
+			/// <param name="index">Индекс элемента массива</param>
+			/// <returns>Элемент</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static TItem GetAt<TItem>(this TItem[] @this, Int32 index)
+			{
+				if (index >= @this.Length)
+				{
+					if (@this.Length == 0)
+					{
+						// Создаем объект по умолчанию
+						Array.Resize(ref @this, 1);
+						return @this[0];
+					}
+					else
+					{
+						return @this[@this.Length - 1];
+					}
+				}
+				else
+				{
+					return @this[index];
+				}
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Проверка на нахождение элемента в массиве
+			/// </summary>
+			/// <typeparam name="TItem">Тип элемента массива</typeparam>
+			/// <param name="this">Массив</param>
+			/// <param name="element">Элемент</param>
+			/// <returns>Статус нахождения</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static Boolean Contains<TItem>(this TItem[] @this, TItem element)
+			{
+				return (Array.IndexOf(@this, element) >= 0);
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Получение следующего элемента в массиве
+			/// </summary>
+			/// <typeparam name="TItem">Тип элемента массива</typeparam>
+			/// <param name="this">Массив</param>
+			/// <param name="current_element">Текущий элемент</param>
+			/// <returns>Элемент</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static TItem NextElement<TItem>(this TItem[] @this, TItem current_element)
+			{
+				if (@this == null || @this.Length == 0)
+				{
+					return (current_element);
+				}
+
+				if (current_element == null)
+				{
+					return (@this[0]);
+				}
+
+				var index = Array.IndexOf(@this, current_element);
+
+				index++;
+
+				if (index >= @this.Length)
+				{
+					index = 0;
+				}
+
+				return (@this[index]);
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Получение предыдущего элемента в массиве
+			/// </summary>
+			/// <typeparam name="TItem">Тип элемента массива</typeparam>
+			/// <param name="this">Массив</param>
+			/// <param name="current_element">Текущий элемент</param>
+			/// <returns>Элемент</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static TItem BackElement<TItem>(this TItem[] @this, TItem current_element)
+			{
+				if (@this == null || @this.Length == 0)
+				{
+					return (current_element);
+				}
+
+				if (current_element == null)
+				{
+					return @this[0];
+				}
+
+				var index = Array.IndexOf(@this, current_element);
+
+				index--;
+
+				if (index < 0)
+				{
+					index = @this.Length - 1;
+				}
+
+				return (@this[index]);
+			}
+			#endregion
+
+			#region ======================================= List ======================================================
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Установка элемента списка по индексу с автоматическим увеличением размера при необходимости
+			/// </summary>
+			/// <typeparam name="TItem">Тип элемента списка</typeparam>
+			/// <param name="this">Список</param>
+			/// <param name="index">Индекс элемента списка</param>
+			/// <param name="element">Элемент списка</param>
+			//---------------------------------------------------------------------------------------------------------
+			public static void SetAt<TItem>(this List<TItem> @this, Int32 index, TItem element)
+			{
+				if (index >= @this.Count)
+				{
+					Int32 delta = index - @this.Count + 1;
+					for (Int32 i = 0; i < delta; i++)
+					{
+						@this.Add(default(TItem));
+					}
+
+					@this[index] = element;
+				}
+				else
+				{
+					@this[index] = element;
+				}
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Получение элемента списка по индексу
+			/// </summary>
+			/// <remarks>
+			/// В случае если индекс выходит за границы списка, то возвращается последний элемент
+			/// </remarks>
+			/// <typeparam name="TItem">Тип элемента списка</typeparam>
+			/// <param name="this">Список</param>
+			/// <param name="index">Индекс элемента списка</param>
+			/// <returns>Элемент</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static TItem GetAt<TItem>(this List<TItem> @this, Int32 index)
+			{
+				if (index >= @this.Count)
+				{
+					if (@this.Count == 0)
+					{
+						// Создаем объект по умолчанию
+						@this.Add(default(TItem));
+						return @this[0];
+					}
+					else
+					{
+						return @this[@this.Count - 1];
+					}
+				}
+				else
+				{
+					return @this[index];
+				}
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Сортировка списка по убыванию
+			/// </summary>
+			/// <typeparam name="TItem">Тип элемента списка</typeparam>
+			/// <param name="this">Список</param>
+			/// <returns>Список</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static List<TItem> SortDescending<TItem>(this List<TItem> @this)
+			{
+				@this.Sort();
+				@this.Reverse();
+				return @this;
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Обрезать список сначала до указанного элемента
+			/// </summary>
+			/// <typeparam name="TItem">Тип элемента списка</typeparam>
+			/// <param name="this">Список</param>
+			/// <param name="item">Элемент</param>
+			/// <param name="included">Включать указанный элемент в удаление</param>
+			/// <returns>Количество удаленных элементов</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static Int32 TrimStart<TItem>(this List<TItem> @this, TItem item, Boolean included = true) where TItem : IComparable<TItem>
+			{
+				Int32 comprare_first = item.CompareTo(@this[0]);
+				Int32 comprare_last = item.CompareTo(@this[@this.Count - 1]);
+
+				// Элемент находиться за пределами списка
+				if (comprare_first <= 0)
+				{
+					return (0);
+				}
+				else
+				{
+					// Удаляем все элементы
+					if (comprare_last > 0)
+					{
+						Int32 count = @this.Count;
+						@this.Clear();
+						return (count);
+					}
+					else
+					{
+						// Удаляем либо до последнего элемента, либо все элементы
+						if (comprare_last == 0)
+						{
+							if (included)
+							{
+								Int32 count = @this.Count;
+								@this.Clear();
+								return (count);
+							}
+							else
+							{
+								Int32 count = @this.Count - 1;
+								@this.RemoveRange(0, count);
+								return (count);
+							}
+						}
+						else
+						{
+							Int32 max_count = @this.Count - 1;
+							for (Int32 i = 1; i < max_count; i++)
+							{
+								if (@this[i].CompareTo(item) == 0)
+								{
+									if (included)
+									{
+										@this.RemoveRange(0, i + 1);
+										return (i + 1);
+									}
+									else
+									{
+										@this.RemoveRange(0, i);
+										return (i);
+									}
+								}
+								else
+								{
+									if (@this[i].CompareTo(item) > 0)
+									{
+										@this.RemoveRange(0, i - 1);
+										return (i - 1);
+									}
+								}
+							}
+						}
+					}
+				}
+
+				return (0);
+			}
+			#endregion
+
+			#region ======================================= Dictionary ================================================
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Получить значение по ключу или указанное значение по умолчанию
+			/// </summary>
+			/// <typeparam name="TKey">Тип ключа</typeparam>
+			/// <typeparam name="TValue">Тип значения</typeparam>
+			/// <param name="this">Словарь</param>
+			/// <param name="key">Ключ</param>
+			/// <param name="default_value">Значение по умолчанию</param>
+			/// <returns>Значение</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static TValue Get<TKey, TValue>(this Dictionary<TKey, TValue> @this, TKey key, TValue default_value) where TValue : struct
+			{
+				TValue result;
+				if (!@this.TryGetValue(key, out result))
+				{
+					@this[key] = result = default_value;
+				}
+				return (result);
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Получить значение по ключу или созданное значение по умолчанию
+			/// </summary>
+			/// <typeparam name="TKey">Тип ключа</typeparam>
+			/// <typeparam name="TValue">Тип значения</typeparam>
+			/// <param name="this">Словарь</param>
+			/// <param name="key">Ключ</param>
+			/// <returns>Значение</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static TValue Get<TKey, TValue>(this Dictionary<TKey, TValue> @this, TKey key) where TValue : new()
+			{
+				TValue result;
+				if (!@this.TryGetValue(key, out result))
+				{
+					@this[key] = result = new TValue();
+				}
+				return (result);
+			}
+			#endregion
+		}
+		//-------------------------------------------------------------------------------------------------------------
+		/*@}*/
+		//-------------------------------------------------------------------------------------------------------------
+	}
+}
+//=====================================================================================================================
