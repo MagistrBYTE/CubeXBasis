@@ -1,3 +1,3 @@
-## CubeXUnityBasis
+## CubeXBasis
 
-CubeXUnityBasis - это набор объединяющий основные кроссплатформенные модули: Core, Math, Common, Algorithm, Patterns которые является базовой платформой для Unity
+CubeXBasis - это набор объединяющий основные кроссплатформенные модули: Core, Math, Common, Algorithm, Patterns которые является базовой платформой для Unity
