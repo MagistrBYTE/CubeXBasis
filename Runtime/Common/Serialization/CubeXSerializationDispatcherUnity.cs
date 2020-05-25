@@ -81,7 +81,7 @@ namespace CubeX
 			/// <summary>
 			/// Набор типов для сохранения
 			/// </summary>
-			private readonly static TSerializationVolume[] VolumeTypes = new TSerializationVolume[]
+			private static readonly TSerializationVolume[] VolumeTypes = new TSerializationVolume[]
 			{
 				TSerializationVolume.Renderer,
 				TSerializationVolume.Light,
