@@ -260,7 +260,7 @@ namespace CubeX
 #if UNITY_2017_1_OR_NEWER
 				String path = XFilePath.GetFileName(XEditorSettings.ASSETS_PATH, file_name, ".cs");
 #else
-				String path = XPath.GetFileName(Environment.CurrentDirectory, file_name, ".cs");
+				String path = XFilePath.GetFileName(Environment.CurrentDirectory, file_name, ".cs");
 #endif
 				// Создаем поток для записи
 				StreamWriter stream_writer = new StreamWriter(path);
