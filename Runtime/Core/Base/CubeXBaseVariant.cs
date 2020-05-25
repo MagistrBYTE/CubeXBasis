@@ -13,11 +13,9 @@
 // Версия: 1.0.0.0
 // Последнее изменение от 23.02.2020
 //=====================================================================================================================
-using CubeX.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 //---------------------------------------------------------------------------------------------------------------------
 #if !(UNITY_2017_1_OR_NEWER)
 using CubeX.Maths;
@@ -326,8 +324,8 @@ namespace CubeX
 				set
 				{
 					mNumberData.X = value;
-					mValueType = TValueType.Single;
-					if (mIOwned != null) mIOwned.OnNotifyUpdated(this, nameof(SingleValue));
+					mValueType = TValueType.Real;
+					if (mIOwned != null) mIOwned.OnNotifyUpdated(this, nameof(RealValue));
 				}
 #endif
 			}
