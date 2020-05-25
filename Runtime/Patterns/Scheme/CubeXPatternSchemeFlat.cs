@@ -35,7 +35,7 @@ namespace CubeX
 			/// <summary>
 			/// Имя элемента XML для обозначения схемы
 			/// </summary>
-			public const String XML_ELEMENT = "Scheme";
+			public const String XML_ELEMENT_NAME = "Scheme";
 			#endregion
 
 			#region ======================================= ДАННЫЕ ====================================================
@@ -206,7 +206,7 @@ namespace CubeX
 			//---------------------------------------------------------------------------------------------------------
 			public void WriteToXml(XmlWriter xml_writer)
 			{
-				xml_writer.WriteStartElement(XML_ELEMENT);
+				xml_writer.WriteStartElement(XML_ELEMENT_NAME);
 				{
 					xml_writer.WriteAttributeString(nameof(Name), mName);
 					xml_writer.WriteAttributeString(nameof(Desc), mDesc);
@@ -228,7 +228,7 @@ namespace CubeX
 			//---------------------------------------------------------------------------------------------------------
 			public void ReadFromXml(XmlReader xml_reader)
 			{
-				if (xml_reader.MoveToElement(XML_ELEMENT))
+				if (xml_reader.MoveToElement(XML_ELEMENT_NAME))
 				{
 					mName = xml_reader.ReadStringFromAttribute(nameof(Name), mName);
 					mDesc = xml_reader.ReadStringFromAttribute(nameof(Desc), mDesc);
@@ -237,7 +237,7 @@ namespace CubeX
 					XmlReader reader_subtree = xml_reader.ReadSubtree();
 					while (reader_subtree.Read())
 					{
-						if (reader_subtree.NodeType == XmlNodeType.Element && reader_subtree.Name == CSchemeDataProperty.XML_ELEMENT)
+						if (reader_subtree.NodeType == XmlNodeType.Element && reader_subtree.Name == CSchemeDataProperty.XML_ELEMENT_NAME)
 						{
 							CSchemeDataProperty property = new CSchemeDataProperty();
 							property.ReadFromXml(xml_reader);
@@ -255,7 +255,7 @@ namespace CubeX
 			//---------------------------------------------------------------------------------------------------------
 			public void ReadFromXml(XmlElement xml_element)
 			{
-				if (xml_element.Name == XML_ELEMENT)
+				if (xml_element.Name == XML_ELEMENT_NAME)
 				{
 					Name = xml_element.GetAttributeValueFromName(nameof(Name), Name);
 					Desc = xml_element.GetAttributeValueFromName(nameof(Desc), Desc);
@@ -263,7 +263,7 @@ namespace CubeX
 					var childs = xml_element.ChildNodes;
 					for (Int32 i = 0; i < childs.Count; i++)
 					{
-						if(childs[i].NodeType == XmlNodeType.Element && childs[i].Name == CSchemeDataProperty.XML_ELEMENT)
+						if(childs[i].NodeType == XmlNodeType.Element && childs[i].Name == CSchemeDataProperty.XML_ELEMENT_NAME)
 						{
 							CSchemeDataProperty property = new CSchemeDataProperty();
 							property.ReadFromXml(childs[i] as XmlElement);

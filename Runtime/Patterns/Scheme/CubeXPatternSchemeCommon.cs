@@ -56,7 +56,7 @@ namespace CubeX
 			/// <summary>
 			/// Имя элемента XML для обозначения свойства
 			/// </summary>
-			public const String XML_ELEMENT = "Column";
+			public const String XML_ELEMENT_NAME = "Column";
 			#endregion
 
 			#region ======================================= ДАННЫЕ ====================================================
@@ -260,7 +260,7 @@ namespace CubeX
 			//---------------------------------------------------------------------------------------------------------
 			public void WriteToXml(XmlWriter xml_writer)
 			{
-				xml_writer.WriteStartElement(XML_ELEMENT);
+				xml_writer.WriteStartElement(XML_ELEMENT_NAME);
 				{
 					xml_writer.WriteAttributeString(nameof(Name), Name);
 					xml_writer.WriteEnumToAttribute(nameof(DataTypeCode), DataTypeCode);
@@ -280,7 +280,7 @@ namespace CubeX
 			//---------------------------------------------------------------------------------------------------------
 			public void ReadFromXml(XmlReader xml_reader)
 			{
-				if (xml_reader.MoveToElement(XML_ELEMENT))
+				if (xml_reader.MoveToElement(XML_ELEMENT_NAME))
 				{
 					Name = xml_reader.ReadStringFromAttribute(nameof(Name), Name);
 					mDataTypeCode = xml_reader.ReadEnumFromAttribute(nameof(DataTypeCode), DataTypeCode);
@@ -299,7 +299,7 @@ namespace CubeX
 			//---------------------------------------------------------------------------------------------------------
 			public void ReadFromXml(XmlElement xml_element)
 			{
-				if (xml_element.Name == XML_ELEMENT)
+				if (xml_element.Name == XML_ELEMENT_NAME)
 				{
 					Name = xml_element.GetAttributeValueFromName(nameof(Name), Name);
 					mDataTypeCode = xml_element.GetAttributeValueFromNameAsEnum(nameof(DataTypeCode), DataTypeCode);
