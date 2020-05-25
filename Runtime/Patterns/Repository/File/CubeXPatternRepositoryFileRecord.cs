@@ -288,7 +288,7 @@ namespace CubeX
 						}
 						else
 						{
-							if (element != null && element.Name == CSchemeFlatData.XML_ELEMENT)
+							if (element != null && element.Name == CSchemeFlatData.XML_ELEMENT_NAME)
 							{
 								Scheme = new CSchemeFlatData();
 								Scheme.ReadFromXml(element);
