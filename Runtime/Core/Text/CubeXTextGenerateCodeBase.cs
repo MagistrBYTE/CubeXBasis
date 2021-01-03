@@ -172,7 +172,7 @@ namespace CubeX
 			/// <param name="version">Версия файла</param>
 			/// <param name="date">Дата файла</param>
 			//---------------------------------------------------------------------------------------------------------
-			public void AddFileVersion(String version = "0.0.0.1", String date = "23.02.2020")
+			public void AddFileVersion(String version = "1.0.0.0", String date = "23.02.2020")
 			{
 				Add("// Версия: " + version);
 				Add("// Последнее изменение от " + date);

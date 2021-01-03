@@ -207,7 +207,7 @@ public class CubeXSerializationServiceWindow : EditorWindow
 			{
 				XSerializationDispatcherUnity.LoadFromXml(mFileAssetDesignXML);
 			}
-			if (GUILayout.Button("Auto Load"))
+			if (GUILayout.Button("Auto Load", XEditorStyles.BUTTON_DROP_DOWN_1))
 			{
 				String[] files = Directory.GetFiles(XEditorSettings.AutoSavePath);
 				GenericMenu menu = new GenericMenu();

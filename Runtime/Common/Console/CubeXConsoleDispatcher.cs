@@ -56,8 +56,10 @@ namespace CubeX
 			internal static Boolean mIsOpened;
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBPLAYER
 			internal static Single mHeightCaption = 30;
+			internal static Single mWidthButtonMode = 120;
 #else
 			internal static Single mHeightCaption = 40;
+			internal static Single mWidthButtonMode = 160;
 #endif
 
 			// Режим ввода команды или сообщения
@@ -127,7 +129,7 @@ namespace CubeX
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBPLAYER
 					mItemStyle.fontSize = 14;
 #else
-					mItemStyle.fontSize = 16;
+					mItemStyle.fontSize = 18;
 #endif
 					mItemStyle.alignment = TextAnchor.MiddleLeft;
 					mItemStyle.wordWrap = true;
@@ -146,7 +148,11 @@ namespace CubeX
 				if (mColumnHeaderStyle == null)
 				{
 					mColumnHeaderStyle = new GUIStyle(GUIStyle.none);
+#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBPLAYER
 					mColumnHeaderStyle.fontSize = 14;
+#else
+					mColumnHeaderStyle.fontSize = 18;
+#endif
 					mColumnHeaderStyle.fontStyle = FontStyle.Bold;
 					mColumnHeaderStyle.alignment = TextAnchor.MiddleLeft;
 					mColumnHeaderStyle.normal.background = XTexture2D.BlackAlpha75;
@@ -337,6 +343,9 @@ namespace CubeX
 								{
 									mOnDrawMessageArea = DrawMessageAreaTrace;
 								}
+
+								// Информируем что команда неисполнена
+								XLogger.Messages.Add(new TLogMessage("System command: <" + name + "> executed", TLogType.Failed));
 							}
 							else
 							{
@@ -381,7 +390,14 @@ namespace CubeX
 					if (mModeCommand != 0)
 					{
 						// Область информирования
-						GUILayout.Box(mTitleConsole, GUILayout.Height(mHeightCaption), GUILayout.MaxWidth(Screen.width * 0.30f));
+						if(Screen.width > 1600)
+						{
+							GUILayout.Box(mTitleConsole, GUILayout.Height(mHeightCaption), GUILayout.MaxWidth(Screen.width * 0.5f));
+						}
+						else
+						{
+							GUILayout.Box(mTitleConsole, GUILayout.Height(mHeightCaption), GUILayout.MaxWidth(Screen.width * 0.3f));
+						}
 
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBPLAYER
 						DrawInputCommand(width_button * 2, mHeightCaption);
@@ -583,7 +599,9 @@ namespace CubeX
 				{
 					case 0:
 						{
-							if (GUILayout.Button("Mode [None]", GUILayout.Width(120), GUILayout.Height(height)))
+							if (GUILayout.Button("Mode [None]", 
+								Screen.width > 1200 ? GUILayout.Width(160) : GUILayout.Width(mWidthButtonMode), 
+								GUILayout.Height(height)))
 							{
 								mModeCommand++;
 
@@ -595,7 +613,7 @@ namespace CubeX
 						}break;
 					case 1:
 						{
-							if (GUILayout.Button("Mode [Command]", GUILayout.Height(height)))
+							if (GUILayout.Button("Mode [Command]",	GUILayout.Height(height)))
 							{
 								mModeCommand++;
 
@@ -669,12 +687,13 @@ namespace CubeX
 			{
 				if(XLogger.Messages.Count == 0)
 				{
-					mTitleConsole = "Console [messages: 0]";
+					mTitleConsole = "Console [messages: <color=yellow>0</color>]";
 				}
 				else
 				{
-					mTitleConsole = "Console [messages: "+ XLogger.Messages.Count.ToString() + "]" + "  [last: " +
-						XLogger.Messages[XLogger.Messages.Count - 1].Text + "]";
+					mTitleConsole = "Console [messages: <color=yellow>" + XLogger.Messages.Count.ToString() + "</color>]" 
+						+ "  [last: <color=yellow>" +
+						XLogger.Messages[XLogger.Messages.Count - 1].Text + "</color>]";
 				}
 			}
 			#endregion
