@@ -23,6 +23,27 @@ TextureImporter:
   - first:
       213: 21300012
     second: Cethiel_FireballUp_A_F07
+  - first:
+      213: 5119170788302284370
+    second: Cethiel_FireballUp_A-Sheet_0
+  - first:
+      213: 8559671104605119637
+    second: Cethiel_FireballUp_A-Sheet_1
+  - first:
+      213: 7017614168548283594
+    second: Cethiel_FireballUp_A-Sheet_2
+  - first:
+      213: -362485009856480242
+    second: Cethiel_FireballUp_A-Sheet_3
+  - first:
+      213: 4059914904727975464
+    second: Cethiel_FireballUp_A-Sheet_4
+  - first:
+      213: 8824262471700779230
+    second: Cethiel_FireballUp_A-Sheet_5
+  - first:
+      213: -6749169590647330775
+    second: Cethiel_FireballUp_A-Sheet_6
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -95,7 +116,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Cethiel_FireballUp_A_F01
+      name: Cethiel_FireballUp_A-Sheet_0
       rect:
         serializedVersion: 2
         x: 0
@@ -103,14 +124,140 @@ TextureImporter:
         width: 84
         height: 128
       alignment: 0
-      pivot: {x: 0, y: -5.718155}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 02305410000000000800000000000000
-      internalID: 21300000
+      spriteID: 256605d95b2fa0740800000000000000
+      internalID: 5119170788302284370
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cethiel_FireballUp_A-Sheet_1
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 128
+        width: 84
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 594e920c48f0ac670800000000000000
+      internalID: 8559671104605119637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cethiel_FireballUp_A-Sheet_2
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 128
+        width: 84
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ac49117c7e2936160800000000000000
+      internalID: 7017614168548283594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cethiel_FireballUp_A-Sheet_3
+      rect:
+        serializedVersion: 2
+        x: 252
+        y: 128
+        width: 84
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e0cb917ddc138faf0800000000000000
+      internalID: -362485009856480242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cethiel_FireballUp_A-Sheet_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 84
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 826ff927817b75830800000000000000
+      internalID: 4059914904727975464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cethiel_FireballUp_A-Sheet_5
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 0
+        width: 84
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ed0198e07f3167a70800000000000000
+      internalID: 8824262471700779230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cethiel_FireballUp_A-Sheet_6
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 0
+        width: 84
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 928e89414022652a0800000000000000
+      internalID: -6749169590647330775
       vertices: []
       indices: 
       edges: []
@@ -118,7 +265,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: bd01462f9472af44b9daa51b4fc023ae
     internalID: 0
     vertices: []
     indices: 
