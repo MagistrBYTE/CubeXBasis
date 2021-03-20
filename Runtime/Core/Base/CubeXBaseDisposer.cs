@@ -64,7 +64,7 @@ namespace CubeX
 			//---------------------------------------------------------------------------------------------------------
 			public static Boolean SetClass<TType>(ref TType current_value, TType new_value) where TType : class
 			{
-				if (current_value == null && new_value == null || current_value != null && current_value.Equals(new_value))
+				if ((current_value == null && new_value == null) || (current_value != null && current_value.Equals(new_value)))
 				{
 					return false;
 				}
@@ -98,7 +98,7 @@ namespace CubeX
 					return;
 				}
 
-				var disposer = resource as IDisposable;
+				IDisposable disposer = resource as IDisposable;
 				if (disposer != null)
 				{
 					try
