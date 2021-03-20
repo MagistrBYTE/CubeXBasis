@@ -2272,7 +2272,7 @@ namespace CubeX
 						case 6: M31 = value; break;
 						case 7: M32 = value; break;
 						case 8: M33 = value; break;
-						default: throw new ArgumentOutOfRangeException("index", "Indices for Matrix3Dx3f run from 0 to 8, inclusive.");
+						default: throw new ArgumentOutOfRangeException(nameof(index), "Indices for Matrix3Dx3f run from 0 to 8, inclusive.");
 					}
 				}
 			}
