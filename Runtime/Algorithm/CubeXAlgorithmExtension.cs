@@ -66,7 +66,7 @@ namespace CubeX
 			public static void FloodVisit4<TType>(this TType[,] array, Int32 start_x, Int32 start_y, Action<Int32, Int32> visitor_delegate,
 				IEqualityComparer<TType> comparer = null)
 			{
-				if (array == null) throw new ArgumentNullException("array");
+				if (array == null) throw new ArgumentNullException(nameof(Array));
 				if (visitor_delegate == null) throw new ArgumentNullException("visit");
 
 				Int32 length_x = array.GetLength(0);
@@ -162,7 +162,7 @@ namespace CubeX
 			public static void FloodVisit8<TType>(this TType[,] array, Int32 start_x, Int32 start_y, Action<Int32, Int32> visitor_delegate,
 				IEqualityComparer<TType> comparer = null)
 			{
-				if (array == null) throw new ArgumentNullException("array");
+				if (array == null) throw new ArgumentNullException(nameof(Array));
 				if (visitor_delegate == null) throw new ArgumentNullException("visit");
 
 				Int32 length_x = array.GetLength(0);
@@ -264,7 +264,7 @@ namespace CubeX
 			//---------------------------------------------------------------------------------------------------------
 			public static void Visit4<TType>(this TType[,] array, Int32 x, Int32 y, Action<Int32, Int32> visitor_delegate)
 			{
-				if (array == null) throw new ArgumentNullException("array");
+				if (array == null) throw new ArgumentNullException(nameof(Array));
 				if (visitor_delegate == null) throw new ArgumentNullException("visit");
 
 				if (x > 0)
@@ -317,7 +317,7 @@ namespace CubeX
 			//---------------------------------------------------------------------------------------------------------
 			public static void Visit4Unbounded<TType>(this TType[,] array, Int32 x, Int32 y, Action<Int32, Int32> visitor_delegate)
 			{
-				if (array == null) throw new ArgumentNullException("array");
+				if (array == null) throw new ArgumentNullException(nameof(Array));
 				if (visitor_delegate == null) throw new ArgumentNullException("visit");
 
 				visitor_delegate(x - 1, y);
@@ -360,7 +360,7 @@ namespace CubeX
 			//---------------------------------------------------------------------------------------------------------
 			public static void Visit8<TType>(this TType[,] array, Int32 x, Int32 y, Action<Int32, Int32> visitor_delegate)
 			{
-				if (array == null) throw new ArgumentNullException("array");
+				if (array == null) throw new ArgumentNullException(nameof(Array));
 				if (visitor_delegate == null) throw new ArgumentNullException("visit");
 
 				Boolean xGreaterThanZero = x > 0;
@@ -423,7 +423,7 @@ namespace CubeX
 			//---------------------------------------------------------------------------------------------------------
 			public static void Visit8Unbounded<TType>(this TType[,] array, Int32 x, Int32 y, Action<Int32, Int32> visitor_delegate)
 			{
-				if (array == null) throw new ArgumentNullException("array");
+				if (array == null) throw new ArgumentNullException(nameof(Array));
 				if (visitor_delegate == null) throw new ArgumentNullException("visit");
 
 				visitor_delegate(x - 1, y - 1);
