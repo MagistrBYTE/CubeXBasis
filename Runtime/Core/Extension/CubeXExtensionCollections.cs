@@ -273,7 +273,7 @@ namespace CubeX
 			//---------------------------------------------------------------------------------------------------------
 			public static Int32 IndexOf<TItem>(this IList<TItem> @this, TItem element)
 			{
-				if(typeof(TItem).IsValueType)
+				if (typeof(TItem).IsValueType)
 				{
 					for (Int32 i = 0; i < @this.Count; i++)
 					{
@@ -513,6 +513,62 @@ namespace CubeX
 					element_to_move = next_element;
 				}
 				return @this;
+			}
+			#endregion
+
+			#region ======================================= IList<String> =============================================
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Преобразование списка строк в одну строку текста с указанным разделителем
+			/// </summary>
+			/// <param name="this">Список строк</param>
+			/// <param name="separator">Разделитель</param>
+			/// <param name="use_space">Использовать ли дополнительный пробел меду элементами</param>
+			//---------------------------------------------------------------------------------------------------------
+			public static String ToTextString(this IList<String> @this, Char separator, Boolean use_space)
+			{
+				return (ToTextString(@this, String.Empty, separator, use_space));
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Преобразование списка строк в одну строку текста с указанным разделителем
+			/// </summary>
+			/// <param name="this">Список строк</param>
+			/// <param name="default_text">Текст если список пустой</param>
+			/// <param name="separator">Разделитель</param>
+			/// <param name="use_space">Использовать ли дополнительный пробел меду элементами</param>
+			//---------------------------------------------------------------------------------------------------------
+			public static String ToTextString(this IList<String> @this, String default_text, Char separator, Boolean use_space)
+			{
+				if (@this == null || @this.Count == 0)
+				{
+					return (default_text);
+				}
+
+				if (@this.Count == 1)
+				{
+					return (@this[0]);
+				}
+				else
+				{
+					StringBuilder builder = new StringBuilder(@this.Count * 10);
+					for (Int32 i = 0; i < @this.Count; i++)
+					{
+						builder.Append(@this[i]);
+
+						if (i < @this.Count - 1)
+						{
+							builder.Append(separator);
+							if (use_space)
+							{
+								builder.Append(XChar.Space);
+							}
+						}
+					}
+
+					return (builder.ToString());
+				}
 			}
 			#endregion
 
