@@ -50,6 +50,16 @@ namespace CubeX
 			/// Единица измерения площади <see cref="TUnitLength"/>
 			/// </summary>
 			Area,
+
+			/// <summary>
+			/// Единица измерения трудоемкости <see cref="TUnitLength"/>
+			/// </summary>
+			Laborintensity,
+
+			/// <summary>
+			/// Единица измерения машиноемкости <see cref="TUnitLength"/>
+			/// </summary>
+			Machinecapacity
 		}
 
 		//-------------------------------------------------------------------------------------------------------------
