@@ -42,11 +42,10 @@ namespace CubeX
 			/// <param name="data">Строка данных</param>
 			/// <returns>Объект</returns>
 			//---------------------------------------------------------------------------------------------------------
-			public static IntObserved DeserializeFromString(String data)
+			public static CIntCalculated DeserializeFromString(String data)
 			{
-				IntObserved value = new IntObserved();
-				value.SetValue(Int32.Parse(data));
-				return value;
+				Int32 int_value = XNumbers.ParseInt(data, 0);
+				return (new CIntCalculated(int_value));
 			}
 			#endregion
 
