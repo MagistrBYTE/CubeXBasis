@@ -12,7 +12,7 @@
 */
 //---------------------------------------------------------------------------------------------------------------------
 // Версия: 1.0.0.0
-// Последнее изменение от 23.02.2020
+// Последнее изменение от 04.04.2021
 //=====================================================================================================================
 using System;
 using System.IO;
@@ -95,16 +95,19 @@ namespace CubeX
 			//---------------------------------------------------------------------------------------------------------
 			public static void SaveToText(String file_name)
 			{
-				FileStream file_stream = new FileStream(file_name, FileMode.Create, FileAccess.Write);
-				StreamWriter stream_writer = new StreamWriter(file_stream);
-
-				for (Int32 i = 0; i < mMessages.Count; i++)
+				if (mMessages != null)
 				{
-					stream_writer.WriteLine(mMessages[i].Text);
-				}
+					FileStream file_stream = new FileStream(file_name, FileMode.Create, FileAccess.Write);
+					StreamWriter stream_writer = new StreamWriter(file_stream);
 
-				stream_writer.Close();
-				file_stream.Close();
+					for (Int32 i = 0; i < mMessages.Count; i++)
+					{
+						stream_writer.WriteLine(mMessages[i].Text);
+					}
+
+					stream_writer.Close();
+					file_stream.Close();
+				}
 			}
 			#endregion
 

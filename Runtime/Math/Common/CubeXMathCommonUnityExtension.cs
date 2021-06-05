@@ -10,7 +10,7 @@
 */
 //---------------------------------------------------------------------------------------------------------------------
 // Версия: 1.0.0.0
-// Последнее изменение от 23.02.2020
+// Последнее изменение от 04.04.2021
 //=====================================================================================================================
 using System;
 using System.Collections;
@@ -34,8 +34,6 @@ namespace CubeX
 		//-------------------------------------------------------------------------------------------------------------
 		public static class XMathExtension
 		{
-#if (UNITY_2017_1_OR_NEWER)
-
 			#region ======================================= МЕТОДЫ Move ===============================================
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
@@ -1891,7 +1889,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Кватернион вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
 			public static IEnumerator RotationToQuadOutIteration(this Transform @this, Single duration, Quaternion target)
@@ -1916,7 +1914,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Кватернион вращения</param>
 			/// <param name="on_completed">Обработчик события окончания вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
@@ -1944,7 +1942,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Кватернион вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
 			public static IEnumerator RotationToQuadInOutIteration(this Transform @this, Single duration, Quaternion target)
@@ -1969,7 +1967,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Кватернион вращения</param>
 			/// <param name="on_completed">Обработчик события окончания вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
@@ -1997,7 +1995,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Кватернион вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
 			public static IEnumerator RotationToCubeInIteration(this Transform @this, Single duration, Quaternion target)
@@ -2022,7 +2020,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Кватернион вращения</param>
 			/// <param name="on_completed">Обработчик события окончания вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
@@ -2050,7 +2048,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Кватернион вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
 			public static IEnumerator RotationToCubeOutIteration(this Transform @this, Single duration, Quaternion target)
@@ -2075,7 +2073,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Кватернион вращения</param>
 			/// <param name="on_completed">Обработчик события окончания вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
@@ -2103,7 +2101,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Кватернион вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
 			public static IEnumerator RotationToCubeInOutIteration(this Transform @this, Single duration, Quaternion target)
@@ -2128,7 +2126,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Кватернион вращения</param>
 			/// <param name="on_completed">Обработчик события окончания вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
@@ -2156,7 +2154,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Кватернион вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
 			public static IEnumerator RotationToBackInIteration(this Transform @this, Single duration, Quaternion target)
@@ -2181,7 +2179,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Кватернион вращения</param>
 			/// <param name="on_completed">Обработчик события окончания вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
@@ -2209,7 +2207,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Кватернион вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
 			public static IEnumerator RotationToBackOutIteration(this Transform @this, Single duration, Quaternion target)
@@ -2234,7 +2232,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Кватернион вращения</param>
 			/// <param name="on_completed">Обработчик события окончания вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
@@ -2262,7 +2260,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Кватернион вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
 			public static IEnumerator RotationToBackInOutIteration(this Transform @this, Single duration, Quaternion target)
@@ -2287,7 +2285,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Кватернион вращения</param>
 			/// <param name="on_completed">Обработчик события окончания вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
@@ -2315,7 +2313,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Кватернион вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
 			public static IEnumerator RotationToExpoInIteration(this Transform @this, Single duration, Quaternion target)
@@ -2340,7 +2338,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Кватернион вращения</param>
 			/// <param name="on_completed">Обработчик события окончания вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
@@ -2368,7 +2366,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Кватернион вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
 			public static IEnumerator RotationToExpoOutIteration(this Transform @this, Single duration, Quaternion target)
@@ -2393,7 +2391,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Кватернион вращения</param>
 			/// <param name="on_completed">Обработчик события окончания вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
@@ -2421,7 +2419,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Кватернион вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
 			public static IEnumerator RotationToExpoInOutIteration(this Transform @this, Single duration, Quaternion target)
@@ -2446,7 +2444,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Кватернион вращения</param>
 			/// <param name="on_completed">Обработчик события окончания вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
@@ -2474,7 +2472,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Целевой кватернион</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
 			public static IEnumerator RotationToSineInIteration(this Transform @this, Single duration, Quaternion target)
@@ -2499,7 +2497,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Целевой кватернион</param>
 			/// <param name="on_completed">Обработчик события окончания вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
@@ -2527,7 +2525,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Целевой кватернион</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
 			public static IEnumerator RotationToSineOutIteration(this Transform @this, Single duration, Quaternion target)
@@ -2552,7 +2550,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Целевой кватернион</param>
 			/// <param name="on_completed">Обработчик события окончания вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
@@ -2580,7 +2578,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Целевой кватернион</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
 			public static IEnumerator RotationToSineInOutIteration(this Transform @this, Single duration, Quaternion target)
@@ -2605,7 +2603,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Целевой кватернион</param>
 			/// <param name="on_completed">Обработчик события окончания вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
@@ -2633,7 +2631,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Целевой кватернион</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
 			public static IEnumerator RotationToElasticInIteration(this Transform @this, Single duration, Quaternion target)
@@ -2658,7 +2656,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Целевой кватернион</param>
 			/// <param name="on_completed">Обработчик события окончания вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
@@ -2686,7 +2684,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Целевой кватернион</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
 			public static IEnumerator RotationToElasticOutIteration(this Transform @this, Single duration, Quaternion target)
@@ -2711,7 +2709,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Целевой кватернион</param>
 			/// <param name="on_completed">Обработчик события окончания вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
@@ -2739,7 +2737,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Целевой кватернион</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
 			public static IEnumerator RotationToElasticInOutIteration(this Transform @this, Single duration, Quaternion target)
@@ -2764,7 +2762,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Целевой кватернион</param>
 			/// <param name="on_completed">Обработчик события окончания вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
@@ -2792,7 +2790,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Целевой кватернион</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
 			public static IEnumerator RotationToBounceInIteration(this Transform @this, Single duration, Quaternion target)
@@ -2817,7 +2815,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Целевой кватернион</param>
 			/// <param name="on_completed">Обработчик события окончания вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
@@ -2845,7 +2843,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Целевой кватернион</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
 			public static IEnumerator RotationToBounceOutIteration(this Transform @this, Single duration, Quaternion target)
@@ -2870,7 +2868,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Целевой кватернион</param>
 			/// <param name="on_completed">Обработчик события окончания вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
@@ -2898,7 +2896,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Целевой кватернион</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
 			public static IEnumerator RotationToBounceInOutIteration(this Transform @this, Single duration, Quaternion target)
@@ -2923,7 +2921,7 @@ namespace CubeX
 			/// </summary>
 			/// <param name="this">Компонент трансформации</param>
 			/// <param name="duration">Время вращения</param>
-			/// <param name="target_angle">Целевой угол</param>
+			/// <param name="target">Целевой кватернион</param>
 			/// <param name="on_completed">Обработчик события окончания вращения</param>
 			/// <returns>Перечислитель</returns>
 			//---------------------------------------------------------------------------------------------------------
@@ -7313,9 +7311,44 @@ namespace CubeX
 				on_completed();
 			}
 			#endregion
-#else
 
-#endif
+			#region ======================================= МЕТОДЫ ПРЕОБРАЗОВАНИЯ =====================================
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Преобразование в вектор Vector2Df
+			/// </summary>
+			/// <param name="@this">Вектор</param>
+			/// <returns>Вектор Vector2Df</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static Vector2Df ToVector2Df(this Vector2 @this)
+			{
+				return (new Vector2Df(@this.x, @this.y));
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Преобразование в вектор Vector3Df
+			/// </summary>
+			/// <param name="@this">Вектор</param>
+			/// <returns>Вектор Vector3Df</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static Vector3Df ToVector3Df(this Vector3 @this)
+			{
+				return (new Vector3Df(@this.x, @this.y, @this.z));
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Преобразование в кватернион Quaternion3Df
+			/// </summary>
+			/// <param name="@this">Кватернион</param>
+			/// <returns>Кватернион Quaternion3Df</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static Quaternion3Df ToQuaternion3Df(this Quaternion @this)
+			{
+				return (new Quaternion3Df(@this.x, @this.y, @this.z, @this.w));
+			}
+			#endregion
 		}
 		//-------------------------------------------------------------------------------------------------------------
 		/*@}*/

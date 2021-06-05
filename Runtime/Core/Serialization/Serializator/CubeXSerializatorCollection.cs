@@ -9,7 +9,7 @@
 */
 //---------------------------------------------------------------------------------------------------------------------
 // Версия: 1.0.0.0
-// Последнее изменение от 23.02.2020
+// Последнее изменение от 04.04.2021
 //=====================================================================================================================
 using System;
 using System.Text;
@@ -87,7 +87,7 @@ namespace CubeX
 #if (UNITY_2017_1_OR_NEWER)
 									UnityEngine.Debug.LogErrorFormat("There is no specified type: <{0}>", element_type.Name);
 #else
-									XLogger.LogErrorFormatModule(XSerializationDispatcher.MODULE_NAME, "There is no specified type: <{0}>", element_type.Name);
+									XLogger.LogErrorFormatModule(nameof(XSerializationDispatcher), "There is no specified type: <{0}>", element_type.Name);
 #endif
 								}
 								else
@@ -237,7 +237,7 @@ namespace CubeX
 #if (UNITY_2017_1_OR_NEWER)
 									UnityEngine.Debug.LogErrorFormat("There is no specified type: <{0}>", reader_subtree.Name);
 #else
-									XLogger.LogErrorFormatModule(XSerializationDispatcher.MODULE_NAME, "There is no specified type: <{0}>", reader_subtree.Name);
+									XLogger.LogErrorFormatModule(nameof(XSerializationDispatcher), "There is no specified type: <{0}>", reader_subtree.Name);
 #endif
 									continue;
 								}
@@ -269,7 +269,7 @@ namespace CubeX
 #if (UNITY_2017_1_OR_NEWER)
 						UnityEngine.Debug.LogErrorFormat("Elements read less <{0}> than required <{1}>", index, count);
 #else
-						XLogger.LogErrorFormatModule(XSerializationDispatcher.MODULE_NAME, "Elements read less <{0}> than required <{1}>", index, count);
+						XLogger.LogErrorFormatModule(nameof(XSerializationDispatcher), "Elements read less <{0}> than required <{1}>", index, count);
 #endif
 					}
 

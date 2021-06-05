@@ -9,7 +9,7 @@
 */
 //---------------------------------------------------------------------------------------------------------------------
 // Версия: 1.0.0.0
-// Последнее изменение от 23.02.2020
+// Последнее изменение от 04.04.2021
 //=====================================================================================================================
 using System;
 using System.Collections.Generic;
@@ -71,6 +71,26 @@ namespace CubeX
 			/// Фильтр для расширения файлов с бинарными данными для TextAsset
 			/// </summary>
 			public const String BYTES_FILTER = "Binary files (*.bytes)|*.bytes";
+
+			/// <summary>
+			/// Фильтр для расширения файлов формата Wavefront
+			/// </summary>
+			public const String D3_OBJ_FILTER = "Wavefront file (*.obj)|*.obj";
+
+			/// <summary>
+			/// Фильтр для расширения файлов формата COLLADA
+			/// </summary>
+			public const String D3_DAE_FILTER = "COLLADA file (*.dae)|*.dae";
+
+			/// <summary>
+			/// Фильтр для расширения файлов формата Autodesk 3ds Max 3D
+			/// </summary>
+			public const String D3_3DS_FILTER = " Autodesk 3ds Max 3D file (*.3ds)|*.3ds";
+
+			/// <summary>
+			/// Фильтр для расширения файлов формата Stereolithography file
+			/// </summary>
+			public const String D3_STL_FILTER = "Stereolithography file (*.stl)|*.stl";
 			#endregion
 
 			#region ======================================= ДАННЫЕ ====================================================
@@ -217,6 +237,44 @@ namespace CubeX
 				dialog.Title = title;
 				dialog.InitialDirectory = directory;
 				dialog.Filter = GetFilterFromExt(extension);
+
+				// Показываем диалог открытия
+				Nullable<Boolean> result = dialog.ShowDialog();
+
+				// Если успешно
+				if (result == true)
+				{
+					return (dialog.FileName);
+				}
+#endif
+				return ("");
+#endif
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Показ диалога для открытия файла(используется спикок расширений)
+			/// </summary>
+			/// <param name="title">Заголовок диалога</param>
+			/// <param name="directory">Директория для открытия файла</param>
+			/// <param name="extension">Расширение файла без точки</param>
+			/// <returns>Полное имя существующего файла или null</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static String OpenUseExtension(String title, String extension)
+			{
+#if (UNITY_2017_1_OR_NEWER)
+#if UNITY_EDITOR
+				return(UnityEditor.EditorUtility.OpenFilePanel(title, DefaultPath, extension));
+#else
+				return("");
+#endif
+#else
+#if USE_WINDOWS
+				// Конфигурация диалога
+				Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
+				dialog.Title = title;
+				dialog.InitialDirectory = DefaultPath;
+				dialog.Filter = extension;
 
 				// Показываем диалог открытия
 				Nullable<Boolean> result = dialog.ShowDialog();

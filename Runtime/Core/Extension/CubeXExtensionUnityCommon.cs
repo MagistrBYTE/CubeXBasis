@@ -11,7 +11,7 @@
 */
 //---------------------------------------------------------------------------------------------------------------------
 // Версия: 1.0.0.0
-// Последнее изменение от 23.02.2020
+// Последнее изменение от 04.04.2021
 //=====================================================================================================================
 using System;
 using System.Collections.Generic;
@@ -81,6 +81,25 @@ namespace CubeX
 				color.g = (Byte)(@this.g * factor);
 				color.b = (Byte)(@this.b * factor);
 				color.a = (Byte)(@this.a * factor);
+
+				return color;
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Преобразование к 32-битному цветовому значению
+			/// </summary>
+			/// <param name="this">Цветовое значение</param>
+			/// <returns>32-битное цветовое значение</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public static TColor ToTColor(this Color @this)
+			{
+				const Single factor = 255.0f;
+				TColor color = new TColor();
+				color.R = (Byte)(@this.r * factor);
+				color.G = (Byte)(@this.g * factor);
+				color.B = (Byte)(@this.b * factor);
+				color.A = (Byte)(@this.a * factor);
 
 				return color;
 			}

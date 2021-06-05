@@ -1,127 +1,150 @@
 ﻿//=====================================================================================================================
 // Проект: CubeXPlatform
 // Раздел: Модуль паттернов
-// Подраздел: Подсистема иерархической модели
+// Подраздел: Иерархические структуры данных
 // Автор: MagistrBYTE aka DanielDem <dementevds@gmail.com>
 //---------------------------------------------------------------------------------------------------------------------
-/** \file CubeXPatternHierarchyModelBegin.cs
-*		Определение интерфейса модели и шаблонов данных для построения начала иерархических отношений.
+/** \file CubeXPatternTreeView.cs
+*		Определение базового элемента для отображения всего дерева.
 */
 //---------------------------------------------------------------------------------------------------------------------
 // Версия: 1.0.0.0
 // Последнее изменение от 04.04.2021
 //=====================================================================================================================
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
+using System.Reflection;
 //=====================================================================================================================
 namespace CubeX
 {
 	namespace Core
 	{
 		//-------------------------------------------------------------------------------------------------------------
-		//! \addtogroup CorePatternHierarchy
+		//! \addtogroup CorePatternTreeNode
 		/*@{*/
 		//-------------------------------------------------------------------------------------------------------------
 		/// <summary>
-		/// Интерфейс для определения модели которая поддерживает иерархические отношения 
-		/// и служит для обозначения начала иерархии
+		/// Базовый класс для отображения дерева
 		/// </summary>
 		//-------------------------------------------------------------------------------------------------------------
-		public interface ICubeXModelHierarchyBegin
+		public class CTreeViewBase
 		{
-		}
+			#region ======================================= ДАННЫЕ ====================================================
+			protected internal CTreeNodeView mRoot;
+			protected internal String mSearchString;
+			protected internal TStringSearchOption mSearchOption;
+			protected internal CTreeNodeView mSelectedNode;
+			#endregion
 
-		//-------------------------------------------------------------------------------------------------------------
-		/// <summary>
-		/// Шаблон реализующий начальный механизм модели для участия в иерархических отношениях которая при этом полноценно
-		/// управляет своими элементами(моделями)
-		/// </summary>
-		/// <remarks>
-		/// Это шаблон специального типа для предоставления корня иерархии
-		/// </remarks>
-		/// <typeparam name="TModel">Тип модели</typeparam>
-		//-------------------------------------------------------------------------------------------------------------
-		public class ModelHierarchyBegin<TModel> : CollectionModel<TModel>, ICubeXModelHierarchyBegin
-			where TModel : ICubeXModelHierarchy
-		{
+			#region ======================================= СВОЙСТВА ==================================================
+			/// <summary>
+			/// Корневой узел дерева
+			/// </summary>
+			public CTreeNodeView Root
+			{
+				get { return (mRoot); }
+			}
+
+			/// <summary>
+			/// Строка для фильтрования и поиска узлов по имени
+			/// </summary>
+			public String SearchString
+			{
+				get { return (mSearchString); }
+				set
+				{
+					if (mSearchString != value)
+					{
+						mSearchString = value;
+						OnFilterd();
+					}
+				}
+			}
+
+			/// <summary>
+			/// Опции поиска узлов по имени
+			/// </summary>
+			public TStringSearchOption SearchOption
+			{
+				get { return (mSearchOption); }
+				set
+				{
+					if (mSearchOption != value)
+					{
+						mSearchOption = value;
+						OnFilterd();
+					}
+				}
+			}
+
+			/// <summary>
+			/// Текущий выбранный узел отображения
+			/// </summary>
+			public CTreeNodeView SelectedNode
+			{
+				get { return (mSelectedNode); }
+			}
+			#endregion
+
 			#region ======================================= КОНСТРУКТОРЫ ==============================================
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
 			/// Конструктор по умолчанию инициализирует объект класса предустановленными значениями
 			/// </summary>
 			//---------------------------------------------------------------------------------------------------------
-			public ModelHierarchyBegin()
-				: this(String.Empty)
+			public CTreeViewBase()
 			{
-
 			}
 
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
 			/// Конструктор инициализирует объект класса указанными параметрами
 			/// </summary>
-			/// <param name="name">Имя модели</param>
+			/// <param name="root">Корневой узел отображения</param>
 			//---------------------------------------------------------------------------------------------------------
-			public ModelHierarchyBegin(String name)
-				: base(name)
+			public CTreeViewBase(CTreeNodeView root)
 			{
+				mRoot = root;
 			}
 			#endregion
 
-			#region ======================================= СИСТЕМНЫЕ МЕТОДЫ ==========================================
+			#region ======================================= ОБЩИЕ МЕТОДЫ ==============================================
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
-			/// Получение копии объекта
+			/// Построение дерева
 			/// </summary>
-			/// <returns>Копия объекта</returns>
+			/// <param name="root">Данные</param>
 			//---------------------------------------------------------------------------------------------------------
-			public override System.Object Clone()
+			public void Build(ICubeXTreeNode root)
 			{
-				ModelHierarchyBegin<TModel> clone = new ModelHierarchyBegin<TModel>();
-				clone.Name = mName;
-
-				for (Int32 i = 0; i < mModels.Count; i++)
-				{
-					clone.AddExistingEmptyModel((TModel)mModels[i].Clone());
-				}
-
-				if (clone is ICubeXGroupHierarchy clone_group && this is ICubeXGroupHierarchy group)
-				{
-					clone_group.IsGroupProperty = group.IsGroupProperty;
-					clone_group.GroupPropertyName = group.GroupPropertyName;
-				}
-
-				return (clone);
+				mRoot = CTreeNodeView.Create(root);
 			}
 
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
-			/// Преобразование к текстовому представлению
+			/// Построение дерева
 			/// </summary>
-			/// <returns>Имя объекта</returns>
+			/// <param name="root">Данные</param>
 			//---------------------------------------------------------------------------------------------------------
-			public override String ToString()
+			public void Build(ICubeXTreeNodeViewBuilder root)
 			{
-				return (mName);
+				mRoot = CTreeNodeView.Create(root);
 			}
-			#endregion
 
-			#region ======================================= МЕТОДЫ ICubeXControllerModel ==============================
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
-			/// Обновление связи с коллекцией для элементов списка
+			/// Фильтрация данных
 			/// </summary>
+			/// <remarks>
+			/// Метод автоматически вызывается при изменении строки поиска или опции поиска
+			/// </remarks>
 			//---------------------------------------------------------------------------------------------------------
-			public override void UpdateOwnerLink()
+			public virtual void OnFilterd()
 			{
-				for (Int32 i = 0; i < mModels.Count; i++)
-				{
-					mModels[i].IOwner = this;
-					mModels[i].UpdateOwnerLink();
-				}
+
 			}
 			#endregion
 		}

@@ -9,7 +9,7 @@
 */
 //---------------------------------------------------------------------------------------------------------------------
 // Версия: 1.0.0.0
-// Последнее изменение от 23.02.2020
+// Последнее изменение от 04.04.2021
 //=====================================================================================================================
 using System;
 using System.Text;
@@ -335,7 +335,7 @@ namespace CubeX
 #if (UNITY_2017_1_OR_NEWER)
 								UnityEngine.Debug.LogErrorFormat("Failed to set property <{0}> of object <{1}> to value <{2}>", member.Name, instance, child_instance);
 #else
-								XLogger.LogErrorFormatModule(XSerializationDispatcher.MODULE_NAME, "Failed to set property <{0}> of object <{1}> to value <{2}>", member.Name, instance, child_instance);
+								XLogger.LogErrorFormatModule(nameof(XSerializationDispatcher), "Failed to set property <{0}> of object <{1}> to value <{2}>", member.Name, instance, child_instance);
 #endif
 							}
 						}
@@ -350,7 +350,7 @@ namespace CubeX
 #if (UNITY_2017_1_OR_NEWER)
 								UnityEngine.Debug.LogErrorFormat("There is no specified type: <{0}>", member_type.Name);
 #else
-								XLogger.LogErrorFormatModule(XSerializationDispatcher.MODULE_NAME, "There is no specified type: <{0}>", member_type.Name);
+								XLogger.LogErrorFormatModule(nameof(XSerializationDispatcher), "There is no specified type: <{0}>", member_type.Name);
 #endif
 								return;
 							}
@@ -368,7 +368,7 @@ namespace CubeX
 #if (UNITY_2017_1_OR_NEWER)
 								UnityEngine.Debug.LogErrorFormat("Failed to set property <{0}> of object <{1}> to value <{2}>", member.Name, instance, child_instance);
 #else
-								XLogger.LogErrorFormatModule(XSerializationDispatcher.MODULE_NAME, "Failed to set property <{0}> of object <{1}> to value <{2}>", member.Name, instance, child_instance);
+								XLogger.LogErrorFormatModule(nameof(XSerializationDispatcher), "Failed to set property <{0}> of object <{1}> to value <{2}>", member.Name, instance, child_instance);
 #endif
 							}
 						}
@@ -383,7 +383,7 @@ namespace CubeX
 #if (UNITY_2017_1_OR_NEWER)
 								UnityEngine.Debug.LogErrorFormat("There is no specified type: <{0}>", member_type.Name);
 #else
-								XLogger.LogErrorFormatModule(XSerializationDispatcher.MODULE_NAME, "There is no specified type: <{0}>", member_type.Name);
+								XLogger.LogErrorFormatModule(nameof(XSerializationDispatcher), "There is no specified type: <{0}>", member_type.Name);
 #endif
 								return;
 							}
@@ -401,7 +401,7 @@ namespace CubeX
 #if (UNITY_2017_1_OR_NEWER)
 								UnityEngine.Debug.LogErrorFormat("Failed to set property <{0}> of object <{1}> to value <{2}>", member.Name, instance, child_instance);
 #else
-								XLogger.LogErrorFormatModule(XSerializationDispatcher.MODULE_NAME, "Failed to set property <{0}> of object <{1}> to value <{2}>", member.Name, instance, child_instance);
+								XLogger.LogErrorFormatModule(nameof(XSerializationDispatcher), "Failed to set property <{0}> of object <{1}> to value <{2}>", member.Name, instance, child_instance);
 #endif
 							}
 						}

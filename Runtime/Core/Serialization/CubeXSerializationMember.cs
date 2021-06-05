@@ -9,7 +9,7 @@
 */
 //---------------------------------------------------------------------------------------------------------------------
 // Версия: 1.0.0.0
-// Последнее изменение от 23.02.2020
+// Последнее изменение от 04.04.2021
 //=====================================================================================================================
 using System;
 using System.Xml.Serialization;
@@ -588,7 +588,7 @@ namespace CubeX
 #if UNITY_2017_1_OR_NEWER
 					UnityEngine.Debug.LogError(error);
 #else
-					XLogger.LogErrorModule(XSerializationDispatcher.MODULE_NAME, error);
+					XLogger.LogErrorModule(nameof(XSerializationDispatcher), error);
 #endif
 					return;
 				}

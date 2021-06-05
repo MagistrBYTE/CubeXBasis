@@ -9,7 +9,7 @@
 */
 //---------------------------------------------------------------------------------------------------------------------
 // Версия: 1.0.0.0
-// Последнее изменение от 23.02.2020
+// Последнее изменение от 04.04.2021
 //=====================================================================================================================
 #if UNITY_EDITOR
 //=====================================================================================================================
@@ -40,9 +40,56 @@ namespace CubeX
 			protected Single mStartDrawY;
 			protected Single mHeight;
 			protected Int32 mControlID;
+			protected Boolean mIsCheckableView;
+			protected Boolean mIsIconableView;
+			protected Func<ICubeXTreeNodeView, Texture> mIconDelegate;
 			#endregion
 
 			#region ======================================= СВОЙСТВА ==================================================
+			/// <summary>
+			/// Отображение флажка выбора элемента узла
+			/// </summary>
+			public Boolean IsCheckableView
+			{
+				get { return (mIsCheckableView); }
+				set
+				{
+					if (mIsCheckableView != value)
+					{
+						mIsCheckableView = value;
+					}
+				}
+			}
+
+			/// <summary>
+			/// Отображение иконки элемента узла
+			/// </summary>
+			public Boolean IsIconableView
+			{
+				get { return (mIsIconableView); }
+				set
+				{
+					if (mIsIconableView != value)
+					{
+						mIsIconableView = value;
+					}
+				}
+			}
+
+			/// <summary>
+			/// Делегат для представления иконки в зависимости от типа узла отображения
+			/// </summary>
+			public Func<ICubeXTreeNodeView, Texture> IconDelegate
+			{
+				get { return (mIconDelegate); }
+				set
+				{
+					if (mIconDelegate != value)
+					{
+						mIconDelegate = value;
+					}
+				}
+			}
 			#endregion
 
 			#region ======================================= КОНСТРУКТОРЫ ==============================================
@@ -165,13 +212,30 @@ namespace CubeX
 			{
 				GUIContent label_сontent = new GUIContent(node_view.Data.ToString());
 
-				if (!node_view.IsLeaf)
+				if(mIsIconableView && mIconDelegate != null)
 				{
-					node_view.IsExpanded = EditorGUI.Foldout(new Rect(rect.x - 12, rect.y, 12, rect.height), node_view.IsExpanded,
-						GUIContent.none);
+					label_сontent.image = mIconDelegate(node_view);
 				}
 
-				EditorGUI.LabelField(rect, label_сontent, selected ? EditorStyles.whiteLabel : EditorStyles.label);
+				if (!node_view.IsLeaf)
+				{
+					Rect rect_foldout = new Rect(rect.x, rect.y, 12, rect.height);
+					node_view.IsExpanded = EditorGUI.Foldout(rect_foldout, node_view.IsExpanded, GUIContent.none);
+				}
+
+				if(mIsCheckableView)
+				{
+					Rect rect_checked = new Rect(rect.x + 12, rect.y + 1, 12, rect.height);
+					node_view.IsChecked = EditorGUI.ToggleLeft(rect_checked, GUIContent.none, node_view.IsChecked);
+
+					Rect rect_value = new Rect(rect.x + 24, rect.y, rect.width - 24, rect.height);
+					EditorGUI.LabelField(rect_value, label_сontent, selected ? EditorStyles.whiteBoldLabel : EditorStyles.label);
+				}
+				else
+				{
+					Rect rect_value = new Rect(rect.x + 14, rect.y, rect.width - 14, rect.height);
+					EditorGUI.LabelField(rect_value, label_сontent, selected ? EditorStyles.whiteBoldLabel : EditorStyles.label);
+				}
 			}
 			#endregion
 		}

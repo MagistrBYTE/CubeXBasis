@@ -11,7 +11,7 @@
 */
 //---------------------------------------------------------------------------------------------------------------------
 // Версия: 1.0.0.0
-// Последнее изменение от 23.02.2020
+// Последнее изменение от 04.04.2021
 //=====================================================================================================================
 using System;
 using System.Text;
@@ -99,11 +99,6 @@ namespace CubeX
 			/// Имя версии файла XML
 			/// </summary>
 			public readonly static Version XML_VERSION = new Version(1, 0, 0, 0);
-
-			/// <summary>
-			/// Имя модуля
-			/// </summary>
-			public const String MODULE_NAME = "Serialization";
 			#endregion
 
 			#region ======================================= ДАННЫЕ ====================================================
@@ -296,9 +291,9 @@ namespace CubeX
 					UnityEngine.Debug.LogFormat("Types load count: {0}", count_types);
 					UnityEngine.Debug.LogFormat("Loaded time: {0} ms", profiler.ElapsedMilliseconds);
 #else
-					XLogger.LogInfoFormatModule(MODULE_NAME, "Assemblies load count: {0}", count_assemblies);
-					XLogger.LogInfoFormatModule(MODULE_NAME, "Types load count: {0}", count_types);
-					XLogger.LogInfoFormatModule(MODULE_NAME, "Loaded time: {0} ms", profiler.ElapsedMilliseconds);
+					XLogger.LogInfoFormatModule(nameof(XSerializationDispatcher), "Assemblies load count: {0}", count_assemblies);
+					XLogger.LogInfoFormatModule(nameof(XSerializationDispatcher), "Types load count: {0}", count_types);
+					XLogger.LogInfoFormatModule(nameof(XSerializationDispatcher), "Loaded time: {0} ms", profiler.ElapsedMilliseconds);
 #endif
 				}
 			}
@@ -410,7 +405,7 @@ namespace CubeX
 #if (UNITY_2017_1_OR_NEWER)
 							UnityEngine.Debug.LogErrorFormat("SerializeData attribute, method none of type: <{0}>", type.Name);
 #else
-							XLogger.LogErrorFormatModule(MODULE_NAME, "SerializeData attribute, method none of type: <{0}>", 
+							XLogger.LogErrorFormatModule(nameof(XSerializationDispatcher), "SerializeData attribute, method none of type: <{0}>", 
 								type.Name + ">");
 #endif
 						}
@@ -607,7 +602,7 @@ namespace CubeX
 						UnityEngine.Debug.LogErrorFormat("Alias <{0}> type <{1}> already exists in the type <{2}>",
 						serialize_data.AliasNameType, serialize_data.SerializeType.Name, sd.SerializeType.Name);
 #else
-						XLogger.LogErrorFormatModule(MODULE_NAME, "Alias <{0}> type <{1}> already exists in the type <{2}>",
+						XLogger.LogErrorFormatModule(nameof(XSerializationDispatcher), "Alias <{0}> type <{1}> already exists in the type <{2}>",
 						serialize_data.AliasNameType, serialize_data.SerializeType.Name, sd.SerializeType.Name);
 #endif
 					}
@@ -667,7 +662,7 @@ namespace CubeX
 #if (UNITY_2017_1_OR_NEWER)
 				UnityEngine.Debug.LogErrorFormat("Not serialize data of type <{0}>", type_name);
 #else
-				XLogger.LogErrorFormatModule(MODULE_NAME, "Not serialize data of type <{0}>", type_name);
+				XLogger.LogErrorFormatModule(nameof(XSerializationDispatcher), "Not serialize data of type <{0}>", type_name);
 #endif
 
 				return null;
@@ -871,7 +866,7 @@ namespace CubeX
 #if (UNITY_2017_1_OR_NEWER)
 								UnityEngine.Debug.LogErrorFormat("There is no specified type: <{0}>", reader.Name);
 #else
-							XLogger.LogErrorFormatModule(MODULE_NAME, "There is no specified type: <{0}>", reader.Name);
+							XLogger.LogErrorFormatModule(nameof(XSerializationDispatcher), "There is no specified type: <{0}>", reader.Name);
 #endif
 								return (result);
 							}
@@ -1205,7 +1200,7 @@ namespace CubeX
 #if (UNITY_2017_1_OR_NEWER)
 									UnityEngine.Debug.LogWarningFormat("Warning version: <{0}>", version.ToString());
 #else
-									XLogger.LogWarningFormatModule(MODULE_NAME, "Warning version: <{0}>", version.ToString());
+									XLogger.LogWarningFormatModule(nameof(XSerializationDispatcher), "Warning version: <{0}>", version.ToString());
 #endif
 								}
 							}
@@ -1367,7 +1362,7 @@ namespace CubeX
 #if (UNITY_2017_1_OR_NEWER)
 									UnityEngine.Debug.LogWarningFormat("Warning version: <{0}>", version.ToString());
 #else
-									XLogger.LogWarningFormatModule(MODULE_NAME, "Warning version: <{0}>", version.ToString());
+									XLogger.LogWarningFormatModule(nameof(XSerializationDispatcher), "Warning version: <{0}>", version.ToString());
 #endif
 								}
 							}
@@ -1560,7 +1555,7 @@ namespace CubeX
 #if (UNITY_2017_1_OR_NEWER)
 							UnityEngine.Debug.LogWarning("The file is not fully read");
 #else
-							XLogger.LogWarningModule(MODULE_NAME, "The file is not fully read");
+							XLogger.LogWarningModule(nameof(XSerializationDispatcher), "The file is not fully read");
 #endif
 						}
 					}
@@ -1576,7 +1571,7 @@ namespace CubeX
 #if (UNITY_2017_1_OR_NEWER)
 					UnityEngine.Debug.LogWarning("Initial label not found");
 #else
-					XLogger.LogWarningModule(MODULE_NAME, "Initial label not found");
+					XLogger.LogWarningModule(nameof(XSerializationDispatcher), "Initial label not found");
 #endif
 				}
 

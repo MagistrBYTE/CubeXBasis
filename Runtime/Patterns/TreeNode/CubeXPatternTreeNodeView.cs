@@ -9,7 +9,7 @@
 */
 //---------------------------------------------------------------------------------------------------------------------
 // Версия: 1.0.0.0
-// Последнее изменение от 23.02.2020
+// Последнее изменение от 04.04.2021
 //=====================================================================================================================
 using System;
 using System.Linq;
@@ -27,6 +27,46 @@ namespace CubeX
 		/*@{*/
 		//-------------------------------------------------------------------------------------------------------------
 		/// <summary>
+		/// Определение интерфейса для хранения ссылки на узел отображения
+		/// </summary>
+		//-------------------------------------------------------------------------------------------------------------
+		public interface ICubeXTreeNodeViewOwner
+		{
+			/// <summary>
+			/// Узел отображения
+			/// </summary>
+			ICubeXTreeNodeView OwnerView { get; set; }
+		}
+
+		//-------------------------------------------------------------------------------------------------------------
+		/// <summary>
+		/// Определение интерфейса для построение визуальной модели узла дерева
+		/// </summary>
+		//-------------------------------------------------------------------------------------------------------------
+		public interface ICubeXTreeNodeViewBuilder
+		{
+			#region ======================================= МЕТОДЫ ====================================================
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Получение количества дочерних узлов
+			/// </summary>
+			/// <returns>Количество дочерних узлов</returns>
+			//---------------------------------------------------------------------------------------------------------
+			Int32 GetCountChildrenNode();
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Получение дочернего узла по индексу
+			/// </summary>
+			/// <param name="index">Индекс дочернего узла</param>
+			/// <returns>Дочерней узел</returns>
+			//---------------------------------------------------------------------------------------------------------
+			System.Object GetChildrenNode(Int32 index);
+			#endregion
+		}
+
+		//-------------------------------------------------------------------------------------------------------------
+		/// <summary>
 		/// Определение интерфейса для отображения узла дерева
 		/// </summary>
 		//-------------------------------------------------------------------------------------------------------------
@@ -36,7 +76,7 @@ namespace CubeX
 			/// <summary>
 			/// Данные узла
 			/// </summary>
-			ICubeXTreeNode Data { get; set; }
+			System.Object Data { get; set; }
 
 			/// <summary>
 			/// Статус раскрытия узла отображения
@@ -102,6 +142,52 @@ namespace CubeX
 			/// <param name="root">Корневой узел</param>
 			/// <returns>Корневой узел отображения</returns>
 			//---------------------------------------------------------------------------------------------------------
+			public static CTreeNodeView Create(ICubeXTreeNodeViewBuilder root)
+			{
+				CTreeNodeView node_root_view = Create(root, null);
+				return (node_root_view);
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Рекурсивное создание узлов отображения
+			/// </summary>
+			/// <param name="node">Узел дерева</param>
+			/// <param name="parent">Родительский узел отображения</param>
+			/// <returns>Корневой узел отображения</returns>
+			//---------------------------------------------------------------------------------------------------------
+			protected static CTreeNodeView Create(ICubeXTreeNodeViewBuilder node, ICubeXTreeNodeView parent)
+			{
+				CTreeNodeView node_root_view = new CTreeNodeView(node, parent);
+				if (parent != null)
+				{
+					parent.IChildrenView.Add(node_root_view);
+					if(node is ICubeXTreeNodeViewOwner view_owner)
+					{
+						view_owner.OwnerView = node_root_view;
+					}
+				}
+
+				Int32 count_child = node.GetCountChildrenNode();
+				for (Int32 i = 0; i < count_child; i++)
+				{
+					System.Object node_data = node.GetChildrenNode(i);
+					if(node_data != null && node_data is ICubeXTreeNodeViewBuilder view_builder)
+					{
+						Create(view_builder, node_root_view);
+					}
+				}
+
+				return (node_root_view);
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Рекурсивное создание узлов отображения
+			/// </summary>
+			/// <param name="root">Корневой узел</param>
+			/// <returns>Корневой узел отображения</returns>
+			//---------------------------------------------------------------------------------------------------------
 			public static CTreeNodeView Create(ICubeXTreeNode root)
 			{
 				CTreeNodeView node_root_view = Create(root, null);
@@ -122,6 +208,10 @@ namespace CubeX
 				if (parent != null)
 				{
 					parent.IChildrenView.Add(node_root_view);
+					if (node is ICubeXTreeNodeViewOwner view_owner)
+					{
+						view_owner.OwnerView = node_root_view;
+					}
 				}
 
 				for (Int32 i = 0; i < node.CountChild; i++)
@@ -165,6 +255,10 @@ namespace CubeX
 					if (node.FiltredNode(match))
 					{
 						parent.IChildrenView.Add(node_root_view);
+						if (node is ICubeXTreeNodeViewOwner view_owner)
+						{
+							view_owner.OwnerView = node_root_view;
+						}
 					}
 				}
 
@@ -179,7 +273,7 @@ namespace CubeX
 			#endregion
 
 			#region ======================================= ДАННЫЕ ====================================================
-			protected internal ICubeXTreeNode mData;
+			protected internal System.Object mData;
 			protected internal Boolean mIsChecked;
 			protected internal Boolean mIsExpanded;
 			protected internal ICubeXTreeNodeView mParent;
@@ -191,10 +285,17 @@ namespace CubeX
 			/// <summary>
 			/// Данные узла дерева
 			/// </summary>
-			public ICubeXTreeNode Data
+			public System.Object Data
 			{
 				get { return (mData); }
-				set { mData = value; }
+				set 
+				{ 
+					mData = value;
+					if (mData != null && mData is ICubeXTreeNodeViewOwner view_owner)
+					{
+						view_owner.OwnerView = this;
+					}
+				}
 			}
 			#endregion
 
@@ -297,11 +398,15 @@ namespace CubeX
 			/// </summary>
 			/// <param name="data">Данные</param>
 			//---------------------------------------------------------------------------------------------------------
-			public CTreeNodeView(ICubeXTreeNode data)
+			public CTreeNodeView(System.Object data)
 			{
 				mData = data;
 				mChildren = new List<ICubeXTreeNodeView>();
 				mLevel = 0;
+				if(mData != null && mData is ICubeXTreeNodeViewOwner view_owner)
+				{
+					view_owner.OwnerView = this;
+				}
 			}
 
 			//---------------------------------------------------------------------------------------------------------
@@ -311,7 +416,7 @@ namespace CubeX
 			/// <param name="data">Данные</param>
 			/// <param name="parent">Родительский узел отображения</param>
 			//---------------------------------------------------------------------------------------------------------
-			public CTreeNodeView(ICubeXTreeNode data, ICubeXTreeNodeView parent) 
+			public CTreeNodeView(System.Object data, ICubeXTreeNodeView parent) 
 				: this(data)
 			{
 				mParent = parent;
@@ -330,7 +435,7 @@ namespace CubeX
 			{
 				if (mData != null)
 				{
-					return (mData.Name);
+					return (mData.ToString());
 				}
 				else
 				{
@@ -361,7 +466,7 @@ namespace CubeX
 			/// <param name="data">Узел с данными</param>
 			/// <returns>Добавленный узел отображения</returns>
 			//---------------------------------------------------------------------------------------------------------
-			public ICubeXTreeNodeView AddChild(ICubeXTreeNode data)
+			public ICubeXTreeNodeView AddChild(System.Object data)
 			{
 				CTreeNodeView node = new CTreeNodeView(data, this);
 				mChildren.Add(node);
@@ -375,7 +480,7 @@ namespace CubeX
 			/// <param name="data">Узел с данными</param>
 			/// <returns>Статус вхождения</returns>
 			//---------------------------------------------------------------------------------------------------------
-			public Boolean HasChild(ICubeXTreeNode data)
+			public Boolean HasChild(System.Object data)
 			{
 				return FindInChildren(data) != null;
 			}
@@ -387,7 +492,7 @@ namespace CubeX
 			/// <param name="data">Узел с данными</param>
 			/// <returns>Найденный дочерний узел или null</returns>
 			//---------------------------------------------------------------------------------------------------------
-			public ICubeXTreeNodeView FindInChildren(ICubeXTreeNode data)
+			public ICubeXTreeNodeView FindInChildren(System.Object data)
 			{
 				Int32 i = 0, l = CountChild;
 				for (; i < l; ++i)
@@ -429,12 +534,15 @@ namespace CubeX
 			//---------------------------------------------------------------------------------------------------------
 			public void VisitData(Predicate<ICubeXTreeNode> match)
 			{
-				if (match(mData))
+				if (mData != null && mData is ICubeXTreeNode tree_node)
 				{
-					Int32 i = 0, l = CountChild;
-					for (; i < l; ++i)
+					if (match(tree_node))
 					{
-						((CTreeNodeView)mChildren[i]).VisitData(match);
+						Int32 i = 0, l = CountChild;
+						for (; i < l; ++i)
+						{
+							((CTreeNodeView)mChildren[i]).VisitData(match);
+						}
 					}
 				}
 			}
@@ -467,7 +575,10 @@ namespace CubeX
 			{
 				if(mIsChecked)
 				{
-					on_visitor(this.Data);
+					if (mData != null && mData is ICubeXTreeNode tree_node)
+					{
+						on_visitor(tree_node);
+					}
 				}
 
 				for (Int32 i = 0; i < CountChild; i++)
@@ -527,119 +638,6 @@ namespace CubeX
 				}
 
 				return (result);
-			}
-			#endregion
-		}
-
-		//-------------------------------------------------------------------------------------------------------------
-		/// <summary>
-		/// Базовый класс для отображения дерева
-		/// </summary>
-		//-------------------------------------------------------------------------------------------------------------
-		public class CTreeViewBase
-		{
-			#region ======================================= ДАННЫЕ ====================================================
-			protected internal CTreeNodeView mRoot;
-			protected internal String mSearchString;
-			protected internal TStringSearchOption mSearchOption;
-			protected internal CTreeNodeView mSelectedNode;
-			#endregion
-
-			#region ======================================= СВОЙСТВА ==================================================
-			/// <summary>
-			/// Корневой узел дерева
-			/// </summary>
-			public CTreeNodeView Root
-			{
-				get { return (mRoot); }
-			}
-
-			/// <summary>
-			/// Строка для фильтрования и поиска узлов по имени
-			/// </summary>
-			public String SearchString
-			{
-				get { return (mSearchString); }
-				set
-				{
-					if (mSearchString != value)
-					{
-						mSearchString = value;
-						OnFilterd();
-					}
-				}
-			}
-
-			/// <summary>
-			/// Опции поиска узлов по имени
-			/// </summary>
-			public TStringSearchOption SearchOption
-			{
-				get { return (mSearchOption); }
-				set
-				{
-					if (mSearchOption != value)
-					{
-						mSearchOption = value;
-						OnFilterd();
-					}
-				}
-			}
-
-			/// <summary>
-			/// Текущий выбранный узел отображения
-			/// </summary>
-			public CTreeNodeView SelectedNode
-			{
-				get { return (mSelectedNode); }
-			}
-			#endregion
-
-			#region ======================================= КОНСТРУКТОРЫ ==============================================
-			//---------------------------------------------------------------------------------------------------------
-			/// <summary>
-			/// Конструктор по умолчанию инициализирует объект класса предустановленными значениями
-			/// </summary>
-			//---------------------------------------------------------------------------------------------------------
-			public CTreeViewBase()
-			{
-			}
-
-			//---------------------------------------------------------------------------------------------------------
-			/// <summary>
-			/// Конструктор инициализирует объект класса указанными параметрами
-			/// </summary>
-			/// <param name="root">Корневой узел отображения</param>
-			//---------------------------------------------------------------------------------------------------------
-			public CTreeViewBase(CTreeNodeView root)
-			{
-				mRoot = root;
-			}
-			#endregion
-
-			#region ======================================= ОБЩИЕ МЕТОДЫ ==============================================
-			//---------------------------------------------------------------------------------------------------------
-			/// <summary>
-			/// Построение дерева
-			/// </summary>
-			/// <param name="root">Данные</param>
-			//---------------------------------------------------------------------------------------------------------
-			public void Build(CTreeNode root)
-			{
-				mRoot = CTreeNodeView.Create(root);
-			}
-
-			//---------------------------------------------------------------------------------------------------------
-			/// <summary>
-			/// Фильтрация данных
-			/// </summary>
-			/// <remarks>
-			/// Метод автоматически вызывается при изменении строки поиска или опции поиска
-			/// </remarks>
-			//---------------------------------------------------------------------------------------------------------
-			public virtual void OnFilterd()
-			{
-
 			}
 			#endregion
 		}
