@@ -5,7 +5,7 @@
 // Автор: MagistrBYTE aka DanielDem <dementevds@gmail.com>
 //---------------------------------------------------------------------------------------------------------------------
 /** \file CubeXTreeNodeView.cs
-*		Отображения дерева для редактора Unity.
+*		Элемент для отображения дерева для редактора Unity.
 */
 //---------------------------------------------------------------------------------------------------------------------
 // Версия: 1.0.0.0
@@ -30,22 +30,102 @@ namespace CubeX
 	{
 		//-------------------------------------------------------------------------------------------------------------
 		/// <summary>
-		/// Класс для отображения дерева
+		/// Элемент для отображения дерева для редактора Unity
 		/// </summary>
 		//-------------------------------------------------------------------------------------------------------------
-		public class CTreeViewGUI : CTreeViewBase
+		public class CTreeViewControl
 		{
 			#region ======================================= ДАННЫЕ ====================================================
-			protected Rect mControlRect;
-			protected Single mStartDrawY;
-			protected Single mHeight;
-			protected Int32 mControlID;
-			protected Boolean mIsCheckableView;
-			protected Boolean mIsIconableView;
-			protected Func<ICubeXTreeNodeView, Texture> mIconDelegate;
+			// Основные параметры
+			protected internal CTreeViewItemObject mRoot;
+			protected internal System.Object mRootData;
+			protected internal CTreeViewItemObject mSelectedNode;
+
+			// Параметры фильтрации
+			protected internal String mSearchString;
+			protected internal TStringSearchOption mSearchOption;
+
+			// Параметры отображения
+			protected internal Boolean mIsCheckableView;
+			protected internal Boolean mIsIconableView;
+			protected internal Func<CTreeViewItemObject, Texture> mIconDelegate;
+
+			// События
+			protected internal Action<CTreeViewItemObject> mOnSelectedNode;
+
+			// Служебные данные для отрисовки
+			protected internal Rect mControlRect;
+			protected internal Single mStartDrawY;
+			protected internal Single mHeight;
+			protected internal Int32 mControlID;
 			#endregion
 
 			#region ======================================= СВОЙСТВА ==================================================
+			//
+			// ОСНОВНЫЕ ПАРАМЕТРЫ
+			//
+			/// <summary>
+			/// Корневой узел дерева
+			/// </summary>
+			public CTreeViewItemObject Root
+			{
+				get { return (mRoot); }
+				set 
+				{ 
+					mRoot = value;
+					if (mRoot != null)
+					{
+						mRootData = mRoot.Data;
+					}
+				}
+			}
+
+			/// <summary>
+			/// Текущий выбранный узел отображения
+			/// </summary>
+			public CTreeViewItemObject SelectedNode
+			{
+				get { return (mSelectedNode); }
+			}
+
+			//
+			// ПАРАМЕТРЫ ФИЛЬТРАЦИИ
+			//
+			/// <summary>
+			/// Строка для фильтрования и поиска узлов по имени
+			/// </summary>
+			public String SearchString
+			{
+				get { return (mSearchString); }
+				set
+				{
+					if (mSearchString != value)
+					{
+						mSearchString = value;
+						OnFiltered();
+					}
+				}
+			}
+
+			/// <summary>
+			/// Опции поиска узлов по имени
+			/// </summary>
+			public TStringSearchOption SearchOption
+			{
+				get { return (mSearchOption); }
+				set
+				{
+					if (mSearchOption != value)
+					{
+						mSearchOption = value;
+						OnFiltered();
+					}
+				}
+			}
+
+			//
+			// ПАРАМЕТРЫ ОТОБРАЖЕНИЯ
+			//
 			/// <summary>
 			/// Отображение флажка выбора элемента узла
 			/// </summary>
@@ -79,7 +159,7 @@ namespace CubeX
 			/// <summary>
 			/// Делегат для представления иконки в зависимости от типа узла отображения
 			/// </summary>
-			public Func<ICubeXTreeNodeView, Texture> IconDelegate
+			public Func<CTreeViewItemObject, Texture> IconDelegate
 			{
 				get { return (mIconDelegate); }
 				set
@@ -87,6 +167,24 @@ namespace CubeX
 					if (mIconDelegate != value)
 					{
 						mIconDelegate = value;
+					}
+				}
+			}
+
+			//
+			// СОБЫТИЯ
+			//
+			/// <summary>
+			/// Событие выбор элемента узла
+			/// </summary>
+			public Action<CTreeViewItemObject> OnSelectedNode
+			{
+				get { return (mOnSelectedNode); }
+				set
+				{
+					if (mOnSelectedNode != value)
+					{
+						mOnSelectedNode = value;
 					}
 				}
 			}
@@ -98,8 +196,19 @@ namespace CubeX
 			/// Конструктор по умолчанию инициализирует объект класса предустановленными значениями
 			/// </summary>
 			//---------------------------------------------------------------------------------------------------------
-			public CTreeViewGUI()
+			public CTreeViewControl()
 			{
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Конструктор инициализирует объект класса указанными параметрами
+			/// </summary>
+			/// <param name="data">Данные корневого узла</param>
+			//---------------------------------------------------------------------------------------------------------
+			public CTreeViewControl(System.Object data)
+			{
+				Root = XTreeViewBuilder.Build(data);
 			}
 
 			//---------------------------------------------------------------------------------------------------------
@@ -108,9 +217,9 @@ namespace CubeX
 			/// </summary>
 			/// <param name="root">Корневой узел отображения</param>
 			//---------------------------------------------------------------------------------------------------------
-			public CTreeViewGUI(CTreeNodeView root)
+			public CTreeViewControl(CTreeViewItemObject root)
 			{
-				mRoot = root;
+				Root = root;
 			}
 			#endregion
 
@@ -122,13 +231,38 @@ namespace CubeX
 			//---------------------------------------------------------------------------------------------------------
 			public void DrawTreeLayout()
 			{
-				mHeight = 0;
-				mStartDrawY = 0;
-				mRoot.Visit(OnGetLayoutHeight);
+				if (mRoot != null)
+				{
+					mHeight = 0;
+					mStartDrawY = 0;
+					mRoot.Visit(OnGetLayoutHeight);
 
-				mControlRect = EditorGUILayout.GetControlRect(false, mHeight);
-				mControlID = GUIUtility.GetControlID(FocusType.Passive, mControlRect);
-				mRoot.Visit(OnDrawRow);
+					mControlRect = EditorGUILayout.GetControlRect(false, mHeight);
+					mControlID = GUIUtility.GetControlID(FocusType.Passive, mControlRect);
+					mRoot.Visit(OnDrawRow);
+				}
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Фильтрация узлов
+			/// </summary>
+			//---------------------------------------------------------------------------------------------------------
+			protected virtual void OnFiltered()
+			{
+				if (String.IsNullOrEmpty(mSearchString) && mRootData != null)
+				{
+					mRoot = XTreeViewBuilder.Build(mRootData);
+				}
+				else
+				{
+					mRoot = XTreeViewBuilder.BuildWithFilter(mRootData, (ICubeXModel node) =>
+					{
+						return (node.Name.Contains(mSearchString));
+					});
+
+					mRoot.Expanded();
+				}
 			}
 			#endregion
 
@@ -140,9 +274,9 @@ namespace CubeX
 			/// <param name="node_view">Узел дерева</param>
 			/// <returns>Высота</returns>
 			//---------------------------------------------------------------------------------------------------------
-			protected virtual Single GetRowHeight(ICubeXTreeNodeView node_view)
+			protected virtual Single GetRowHeight(ICubeXTreeViewItemBase node_view)
 			{
-				return (EditorGUIUtility.singleLineHeight);
+				return (EditorGUIUtility.singleLineHeight + 2);
 			}
 
 			//---------------------------------------------------------------------------------------------------------
@@ -152,9 +286,12 @@ namespace CubeX
 			/// <param name="node_view">Узел дерева</param>
 			/// <returns>Статус продолжения вычисления высоты дерева</returns>
 			//---------------------------------------------------------------------------------------------------------
-			protected virtual Boolean OnGetLayoutHeight(ICubeXTreeNodeView node_view)
+			protected virtual Boolean OnGetLayoutHeight(ICubeXTreeViewItemBase node_view)
 			{
-				if (node_view.Data == null) return true;
+				if(node_view is CTreeViewItemObject node_object)
+				{
+					if (node_object.Data == null) return true;
+				}
 
 				mHeight += GetRowHeight(node_view);
 				return (node_view.IsExpanded);
@@ -167,9 +304,12 @@ namespace CubeX
 			/// <param name="node_view">Узел дерева</param>
 			/// <returns>Статус раскрытия данного узла</returns>
 			//---------------------------------------------------------------------------------------------------------
-			protected virtual Boolean OnDrawRow(ICubeXTreeNodeView node_view)
+			protected virtual Boolean OnDrawRow(ICubeXTreeViewItemBase node_view)
 			{
-				if (node_view.Data == null) return true;
+				if (node_view is CTreeViewItemObject node_object)
+				{
+					if (node_object.Data == null) return true;
+				}
 
 				Single row_indent = 16 * node_view.Level;
 				Single row_height = GetRowHeight(node_view);
@@ -183,13 +323,15 @@ namespace CubeX
 					GUI.Box(row_rect, GUIContent.none, XEditorStyles.BOX_FLOW_NODE_0_ON);
 				}
 
-				OnDrawTreeNode(indent_rect, node_view, mSelectedNode == node_view, false);
+				OnDrawTreeNode(indent_rect, node_view as CTreeViewItemObject, mSelectedNode == node_view, false);
 
 				// test for events
 				EventType event_type = Event.current.GetTypeForControl(mControlID);
 				if (event_type == EventType.MouseUp && row_rect.Contains(Event.current.mousePosition))
 				{
-					mSelectedNode = node_view as CTreeNodeView;
+					mSelectedNode = node_view as CTreeViewItemObject;
+
+					if (mOnSelectedNode != null) mOnSelectedNode(mSelectedNode);
 
 					GUI.changed = true;
 					Event.current.Use();
@@ -208,13 +350,28 @@ namespace CubeX
 			/// <param name="selected">Статус выбора узла</param>
 			/// <param name="focus">Статус фокуса узла</param>
 			//---------------------------------------------------------------------------------------------------------
-			protected virtual void OnDrawTreeNode(Rect rect, ICubeXTreeNodeView node_view, Boolean selected, Boolean focus)
+			protected virtual void OnDrawTreeNode(Rect rect, CTreeViewItemObject node_view, Boolean selected, Boolean focus)
 			{
 				GUIContent label_сontent = new GUIContent(node_view.Data.ToString());
 
 				if(mIsIconableView && mIconDelegate != null)
 				{
 					label_сontent.image = mIconDelegate(node_view);
+				}
+				else
+				{
+					// Специальные случае
+					if (node_view.Data is CFileSystemDirectory)
+					{
+						label_сontent.image = EditorGUIUtility.IconContent(XEditorStyles.ICON_FOLDER).image;
+					}
+					else
+					{
+						if (node_view.Data is CFileSystemFile system_file)
+						{
+							label_сontent.image = XEditorInspector.GetIconForFile(system_file.Info.Extension);
+						}
+					}
 				}
 
 				if (!node_view.IsLeaf)
@@ -226,7 +383,16 @@ namespace CubeX
 				if(mIsCheckableView)
 				{
 					Rect rect_checked = new Rect(rect.x + 12, rect.y + 1, 12, rect.height);
-					node_view.IsChecked = EditorGUI.ToggleLeft(rect_checked, GUIContent.none, node_view.IsChecked);
+					if (node_view.IsChecked.HasValue)
+					{
+						node_view.IsChecked = EditorGUI.ToggleLeft(rect_checked, GUIContent.none, node_view.IsChecked.Value);
+					}
+					else
+					{
+						EditorGUI.showMixedValue = true;
+						EditorGUI.ToggleLeft(rect_checked, GUIContent.none, node_view.IsChecked.Value);
+						EditorGUI.showMixedValue = false;
+					}
 
 					Rect rect_value = new Rect(rect.x + 24, rect.y, rect.width - 24, rect.height);
 					EditorGUI.LabelField(rect_value, label_сontent, selected ? EditorStyles.whiteBoldLabel : EditorStyles.label);

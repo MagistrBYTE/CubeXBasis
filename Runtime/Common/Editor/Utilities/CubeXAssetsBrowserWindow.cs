@@ -59,8 +59,9 @@ public class CubeXAssetsBrowserWindow : CubeXUtilityBaseWindow
 	#region =============================================== ДАННЫЕ ====================================================
 	// Основные данные
 	[SerializeField]
-	protected CTreeViewFileSystem mExploreFile;
+	protected CTreeViewControl mExploreFile;
 	protected SearchField mSearchField;
+	protected CFileSystemDirectory mBaseDirectory;
 	protected Editor mEditorAsset;
 	protected String mRemoveStartName;
 	protected String mRemoveEndName;
@@ -76,10 +77,11 @@ public class CubeXAssetsBrowserWindow : CubeXUtilityBaseWindow
 	//-----------------------------------------------------------------------------------------------------------------
 	public void OnEnable()
 	{
+		mBaseDirectory = new CFileSystemDirectory(XEditorSettings.ASSETS_PATH);
+		mBaseDirectory.RecursiveFileSystemInfo();
 		mSearchField = new SearchField();
-		mExploreFile = new CTreeViewFileSystem(XEditorSettings.ASSETS_PATH);
-		mExploreFile.BaseDirectory.RecursiveFileSystemInfo();
-		mExploreFile.ReBuild();
+		mExploreFile = new CTreeViewControl(mBaseDirectory);
+		mExploreFile.IsCheckableView = true;
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------
@@ -146,9 +148,9 @@ public class CubeXAssetsBrowserWindow : CubeXUtilityBaseWindow
 			{
 				if (mRemoveStartName.IsExists())
 				{
-					mExploreFile.Root.VisitDataSelected((ICubeXTreeNode node) =>
+					mExploreFile.Root.VisitDataChecked((ICubeXModel node) =>
 					{
-						CFileNode file_node = node as CFileNode;
+						CFileSystemFile file_node = node as CFileSystemFile;
 						if (file_node != null)
 						{
 							file_node.ModifyNameOfRemove(TStringSearchOption.Start, mRemoveStartName);
@@ -168,9 +170,9 @@ public class CubeXAssetsBrowserWindow : CubeXUtilityBaseWindow
 			{
 				if (mRemoveEndName.IsExists())
 				{
-					mExploreFile.Root.VisitDataSelected((ICubeXTreeNode node) =>
+					mExploreFile.Root.VisitDataChecked((ICubeXModel node) =>
 					{
-						CFileNode file_node = node as CFileNode;
+						CFileSystemFile file_node = node as CFileSystemFile;
 						if (file_node != null)
 						{
 							file_node.ModifyNameOfRemove(TStringSearchOption.End, mRemoveEndName);
@@ -194,9 +196,9 @@ public class CubeXAssetsBrowserWindow : CubeXUtilityBaseWindow
 				{
 					Int32 count = mExploreFile.Root.GetCountCheckedNodes();
 					Int32 index = 0;
-					mExploreFile.Root.VisitDataSelected((ICubeXTreeNode node) =>
+					mExploreFile.Root.VisitDataChecked((ICubeXModel node) =>
 					{
-						CFileNode file_node = node as CFileNode;
+						CFileSystemFile file_node = node as CFileSystemFile;
 						if (file_node != null)
 						{
 							file_node.ModifyNameOfReplace(TStringSearchOption.Start, mReplaceEndNameSource,
