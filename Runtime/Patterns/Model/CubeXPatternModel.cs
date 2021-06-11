@@ -108,6 +108,7 @@ namespace CubeX
 			[Description("Уникальный идентификатор объекта")]
 			[Category(XGroupDesc.ID)]
 			[CubeXPropertyOrder(100)]
+			[ReadOnly(true)]
 			public virtual Int32 ID
 			{
 				get { return (mID); }

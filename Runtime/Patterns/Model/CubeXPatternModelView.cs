@@ -61,7 +61,7 @@ namespace CubeX
 			/// Подразумевает выбор элемента пользователем для каких-либо действий.
 			/// Активировано может быть для нескольких элементов списка
 			/// </remarks>
-			Boolean IsChecked { get; set; }
+			Boolean? IsChecked { get; set; }
 
 			/// <summary>
 			/// Отображение элемента
@@ -94,7 +94,7 @@ namespace CubeX
 			#region ======================================= ДАННЫЕ ====================================================
 			protected internal Boolean mIsEnabled;
 			protected internal Boolean mIsSelected;
-			protected internal Boolean mIsChecked;
+			protected internal Boolean? mIsChecked;
 			protected internal Boolean mIsPresented;
 			#endregion
 
@@ -139,7 +139,7 @@ namespace CubeX
 			/// Выбор элемента
 			/// </summary>
 			[Browsable(false)]
-			public Boolean IsChecked
+			public Boolean? IsChecked
 			{
 				get { return (mIsChecked); }
 				set
