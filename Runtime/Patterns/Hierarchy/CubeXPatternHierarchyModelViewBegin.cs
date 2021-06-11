@@ -58,7 +58,7 @@ namespace CubeX
 			// Основные параметры
 			protected internal Boolean mIsEnabled;
 			protected internal Boolean mIsSelected;
-			protected internal Boolean mIsChecked;
+			protected internal Boolean? mIsChecked;
 			protected internal Boolean mIsPresented;
 
 			// Группирование
@@ -132,7 +132,7 @@ namespace CubeX
 			/// Выбор элемента
 			/// </summary>
 			[Browsable(false)]
-			public Boolean IsChecked
+			public Boolean? IsChecked
 			{
 				get { return (mIsChecked); }
 				set
@@ -329,7 +329,7 @@ namespace CubeX
 			}
 			#endregion
 
-			#region ======================================= МЕТОДЫ ICubeXControllerModel ==============================
+			#region ======================================= МЕТОДЫ ICubeXCollectionModel ==============================
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
 			/// Обновление связи с коллекцией для элементов списка

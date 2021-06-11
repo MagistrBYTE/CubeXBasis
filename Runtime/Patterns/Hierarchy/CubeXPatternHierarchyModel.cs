@@ -156,7 +156,7 @@ namespace CubeX
 			}
 			#endregion
 
-			#region ======================================= МЕТОДЫ ICubeXControllerModel ==============================
+			#region ======================================= МЕТОДЫ ICubeXCollectionModel ==============================
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
 			/// Обновление связи с коллекцией для элементов списка
@@ -168,6 +168,63 @@ namespace CubeX
 				{
 					mModels[i].IOwner = this;
 					mModels[i].UpdateOwnerLink();
+				}
+			}
+
+			//--------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Фильтрация дочерних элементов по предикату
+			/// </summary>
+			/// <param name="match">Предикат</param>
+			/// <returns>Истина если объект или его дочерний элемент проходят условия проверки предикатом</returns>
+			//--------------------------------------------------------------------------------------------------------
+			public override Boolean FiltredModel(Predicate<ICubeXModel> match)
+			{
+				if (match != null)
+				{
+					// Проверяем даный узел
+					Boolean result = match(this);
+
+					// Проверяем дочерние узлы
+					if (mModels != null && mModels.Count > 0)
+					{
+						for (Int32 i = 0; i < mModels.Count; i++)
+						{
+							result = mModels[i].FiltredModel(match);
+							if (result)
+							{
+								result = true;
+								break;
+							}
+						}
+					}
+
+					return (result);
+				}
+				else
+				{
+					return (true);
+				}
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Посещение элементов и дочерних элементов указанным посетителем
+			/// </summary>
+			/// <param name="on_visitor">Делегат посетителя</param>
+			//---------------------------------------------------------------------------------------------------------
+			public override void VisitModel(Action<ICubeXModel> on_visitor)
+			{
+				if (mModels != null && mModels.Count > 0 && on_visitor != null)
+				{
+					for (Int32 i = 0; i < mModels.Count; i++)
+					{
+						on_visitor(mModels[i]);
+						if(mModels[i] != null)
+						{
+							mModels[i].VisitModel(on_visitor);
+						}
+					}
 				}
 			}
 			#endregion

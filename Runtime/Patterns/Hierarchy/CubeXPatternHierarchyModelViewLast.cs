@@ -34,8 +34,7 @@ namespace CubeX
 		//-------------------------------------------------------------------------------------------------------------
 		[Serializable]
 		public class ModelHierarchyViewLast<TCollectionModelView> : ModelView<TCollectionModelView>, ICubeXModelHierarchyView, 
-			ICubeXModelHierarchyLast
-			where TCollectionModelView : class, ICubeXCollectionModelView
+			ICubeXModelHierarchyLast where TCollectionModelView : class, ICubeXCollectionModelView
 		{
 			#region ======================================= СВОЙСТВА ICubeXCollectionModel ============================
 			/// <summary>
@@ -130,7 +129,7 @@ namespace CubeX
 			}
 			#endregion
 
-			#region ======================================= МЕТОДЫ ICubeXControllerModel ==============================
+			#region ======================================= МЕТОДЫ ICubeXCollectionModel ==============================
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
 			/// Обновление связи с коллекцией для элементов списка
@@ -154,6 +153,35 @@ namespace CubeX
 			public Boolean IsSupportModel(ICubeXModelOwned model)
 			{
 				return (false);
+			}
+
+			//--------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Фильтрация дочерних элементов по предикату
+			/// </summary>
+			/// <param name="match">Предикат</param>
+			/// <returns>Истина если объект или его дочерний элемент проходят условия проверки предикатом</returns>
+			//--------------------------------------------------------------------------------------------------------
+			public virtual Boolean FiltredModel(Predicate<ICubeXModel> match)
+			{
+				if (match != null)
+				{
+					return (match(this));
+				}
+				else
+				{
+					return (true);
+				}
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Посещение элементов и дочерних элементов указанным посетителем
+			/// </summary>
+			/// <param name="on_visitor">Делегат посетителя</param>
+			//---------------------------------------------------------------------------------------------------------
+			public virtual void VisitModel(Action<ICubeXModel> on_visitor)
+			{
 			}
 			#endregion
 
